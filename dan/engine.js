@@ -1,6 +1,8 @@
 class AnimatedObject {
   constructor(drawFunction) {
-    this.draw = drawFunction; // (sketch, deltaT, keypointState)
+    if (drawFunction) {
+      this.draw = drawFunction; // (sketch, deltaT, keypointState)
+    }
   }
 }
 
@@ -10,7 +12,8 @@ const EventType = {
   StopMoving: 2, // e.g. hand stops moving
   ChangeDirection: 3, // e.g. hand moving down then up, deltaVAngle changes
   Collision: 4, // e.g. right hand hits left hand, for claps, data is {collider: otherKeypoint} for object it collided with
-  CrossBody: 5 // e.g. right hand moves to left side of body
+  ExitCollision: 5, // e.g. right hand stops hitting left hand, data is {collider: otherKeypoint} for object it collided with
+  CrossBody: 6 // e.g. right hand moves to left side of body
 }
 
 class EventListener {
@@ -21,7 +24,9 @@ class EventListener {
   }
 }
 
-const animatedObjectList = [];
+const normWidthFactor = 1280; // Arbitrary number to allow us to define units of distance consistently independent of window size
+
+const animatedObjects = [];
 const eventListeners = [];
 
 const triggerListeners = (keypoint, eventType, data) => {
@@ -29,20 +34,19 @@ const triggerListeners = (keypoint, eventType, data) => {
                 .forEach(listener => listener.callback(keypoint, data));
 }
 
-const p5config = (sketch) => {
-  const normWidthFactor = 1280; // Arbitrary number to allow us to define units of speed consistently independent of window size
-  
-  const webcam = sketch.createCapture(sketch.VIDEO);
-  const getWebcamRatio = () => webcam.elt.videoWidth / webcam.elt.videoHeight;
-  webcam.hide();
-  
-  const webcamSize = () => {
-    if (window.innerHeight * getWebcamRatio() > window.innerWidth) {
-      return { width: window.innerWidth, height: window.innerWidth / getWebcamRatio() };
-    } else {
-      return { width: window.innerHeight * getWebcamRatio(), height: window.innerHeight };
-    }
+const getWebcamRatio = () => document.querySelector('video').videoWidth / document.querySelector('video').videoHeight;
+const webcamSize = () => {
+  if (window.innerHeight * getWebcamRatio() > window.innerWidth) {
+    return { width: window.innerWidth, height: window.innerWidth / getWebcamRatio() };
+  } else {
+    return { width: window.innerHeight * getWebcamRatio(), height: window.innerHeight };
   }
+}
+const getDistanceRatio = () => normWidthFactor / webcamSize().width;
+
+const p5config = (sketch) => {
+  const webcam = sketch.createCapture(sketch.VIDEO);
+  webcam.hide();
   
   const resizeWebcam = () => {
     webcam.size(webcamSize().width, webcamSize().height);
@@ -55,7 +59,7 @@ const p5config = (sketch) => {
     static angleToChangeDirection = 60; // degrees
     static crossCenterThreshold = 10; // some arbitrary distance unit, distance between eyes when at laptop is 200
     static collisionRadius = 100; // some arbitrary distance unit
-    static unCollisionRadius = 120; // some arbitrary slightly larger distance unit
+    static unCollisionRadius = 110; // some arbitrary slightly larger distance unit
     
     constructor(name, bodyCenter) {
       this.name = name;
@@ -74,7 +78,7 @@ const p5config = (sketch) => {
     }
     
     get normSpeed() {
-      return this.speed * normWidthFactor / webcamSize().width;
+      return this.speed * getDistanceRatio();
     }
     
     get velocity() {
@@ -83,8 +87,8 @@ const p5config = (sketch) => {
     
     get normVelocity() {
       return {
-        x: this.velocity.x * normWidthFactor / webcamSize.width,
-        y: this.velocity.y * normWidthFactor / webcamSize.width
+        x: this.velocity.x * getDistanceRatio(),
+        y: this.velocity.y * getDistanceRatio()
       }
     }
     
@@ -99,6 +103,7 @@ const p5config = (sketch) => {
     
     removeCollision(otherKeypoint) {
       this.activeCollisions.splice(this.activeCollisions.indexOf(otherKeypoint.name), 1);
+      triggerListeners(this, EventType.ExitCollision, {collider: otherKeypoint});
     }
     
     updatePosition(position, deltaT) {
@@ -140,10 +145,10 @@ const p5config = (sketch) => {
         triggerListeners(this, EventType.ChangeDirection, {});
       }
       
-      if (!this.rightOfCenter && this.x > this.bodyCenterPosition.x + Keypoint.crossCenterThreshold * normWidthFactor / webcamSize().width) {
+      if (!this.rightOfCenter && this.x > this.bodyCenterPosition.x + Keypoint.crossCenterThreshold * getDistanceRatio()) {
         this.rightOfCenter = true;
         triggerListeners(this, EventType.CrossBody, {});
-      } else if (this.rightOfCenter && this.x < this.bodyCenterPosition.x - Keypoint.crossCenterThreshold * normWidthFactor / webcamSize().width) {
+      } else if (this.rightOfCenter && this.x < this.bodyCenterPosition.x - Keypoint.crossCenterThreshold * getDistanceRatio()) {
         this.rightOfCenter = false;
         triggerListeners(this, EventType.CrossBody, {});
       }
@@ -202,7 +207,7 @@ const p5config = (sketch) => {
         const keypoint = keypointState[keypoints[i].part];
         for (let j = i + 1; j < keypoints.length; j++) {
           const otherKeypoint = keypointState[keypoints[j].part];
-          const distance = Math.sqrt(Math.pow(keypoint.x - otherKeypoint.x, 2) + Math.pow(keypoint.y - otherKeypoint.y, 2)) * normWidthFactor / webcamSize().width;
+          const distance = Math.sqrt(Math.pow(keypoint.x - otherKeypoint.x, 2) + Math.pow(keypoint.y - otherKeypoint.y, 2)) * getDistanceRatio();
           if (distance < Keypoint.collisionRadius * 2) {
             if (!keypoint.isCollidingWith(otherKeypoint)) {
               keypoint.triggerCollision(otherKeypoint);
@@ -250,20 +255,22 @@ const p5config = (sketch) => {
     resizeWebcam();
     sketch.background(100);
     sketch.image(webcam, 0, 0, webcamSize().width, webcamSize().height);
-    sketch.fill(100);
-    sketch.stroke(100);
-    sketch.strokeWeight(5);
-    if (poses[0]) {
-      drawPose(poses[0], deltaT);
-    }
+    // sketch.fill(100);
+    // sketch.stroke(100);
+    // sketch.strokeWeight(5);
+    // if (poses[0]) {
+    //   drawPose(poses[0], deltaT);
+    // }
     const doneAnimObjects = [];
-    for (animObj in animatedObjectList) {
+    for (let i = 0; i < animatedObjects.length; i++) {
+      const animObj = animatedObjects[i];
       if (animObj.draw(sketch, deltaT, keypointState)) {
         doneAnimObjects.push(animObj);
       }
     }
-    for (doneAnimObj in doneAnimObjects) {
-      animatedObjectList.splice(animatedObjectList.indexOf(doneAnimObj),1);
+    for (let i = 0; i < doneAnimObjects.length; i++) {
+      const doneAnimObj = doneAnimObjects[i];
+      animatedObjects.splice(animatedObjects.indexOf(doneAnimObj),1);
     }
   }
   
@@ -274,3 +281,18 @@ const p5config = (sketch) => {
 }
 
 new p5(p5config);
+
+const Engine = {
+  addAnimatedObject: (ao) => {
+    animatedObjects.push(ao);
+  },
+  removeAnimatedObject: (ao) => {
+    animatedObjects.splice(animatedObjects.indexOf(ao), 1);
+  },
+  addListener: (listener) => {
+    eventListeners.push(listener);
+  },
+  removeListener: (listener) => {
+    eventListeners.splice(eventListeners.indexOf(listener), 1);
+  }
+};
