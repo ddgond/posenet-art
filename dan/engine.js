@@ -42,6 +42,9 @@ const webcamSize = () => {
     return { width: window.innerHeight * getWebcamRatio(), height: window.innerHeight };
   }
 }
+
+// multiply by this to get scaled relative coordinates from absolute coordinates
+// divide by this to get absolute coordinates from scaled relative coordinates
 const getDistanceRatio = () => normWidthFactor / webcamSize().width;
 
 const p5config = (sketch) => {
@@ -59,7 +62,7 @@ const p5config = (sketch) => {
     static angleToChangeDirection = 60; // degrees
     static crossCenterThreshold = 10; // some arbitrary distance unit, distance between eyes when at laptop is 200
     static collisionRadius = 100; // some arbitrary distance unit
-    static unCollisionRadius = 110; // some arbitrary slightly larger distance unit
+    static unCollisionRadius = 105; // some arbitrary slightly larger distance unit
     
     constructor(name, bodyCenter) {
       this.name = name;
@@ -145,10 +148,10 @@ const p5config = (sketch) => {
         triggerListeners(this, EventType.ChangeDirection, {});
       }
       
-      if (!this.rightOfCenter && this.x > this.bodyCenterPosition.x + Keypoint.crossCenterThreshold * getDistanceRatio()) {
+      if (!this.rightOfCenter && this.x > this.bodyCenterPosition.x + Keypoint.crossCenterThreshold / getDistanceRatio()) {
         this.rightOfCenter = true;
         triggerListeners(this, EventType.CrossBody, {});
-      } else if (this.rightOfCenter && this.x < this.bodyCenterPosition.x - Keypoint.crossCenterThreshold * getDistanceRatio()) {
+      } else if (this.rightOfCenter && this.x < this.bodyCenterPosition.x - Keypoint.crossCenterThreshold / getDistanceRatio()) {
         this.rightOfCenter = false;
         triggerListeners(this, EventType.CrossBody, {});
       }
@@ -227,7 +230,7 @@ const p5config = (sketch) => {
   const drawPose = (pose, deltaT) => {
     for (let i = 0; i < pose.keypoints.length; i++) {
       const keypoint = pose.keypoints[i];
-      if (keypoint.score > 0.2 && keypointState[keypoint.part].isMoving) {
+      if (keypoint.score > 0.2) {
         sketch.stroke(100 - keypointState[keypoint.part].normSpeed * 20, 100, 100);
         sketch.line(
           keypoint.position.x,

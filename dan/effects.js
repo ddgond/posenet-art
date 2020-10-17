@@ -1,12 +1,13 @@
 class Sparkle extends AnimatedObject {
-  static getFallSpeed = () => 10 * getDistanceRatio() / 1000; // per ms
-  static getWiggleDistance = () => 10 * getDistanceRatio();
+  static fallSpeed = 40 / 1000; // per ms
+  static wiggleDistance = 60;
   
-  constructor(x, y, duration) {
+  constructor(x, y, radius, duration) {
     super();
     this.elapsedTime = 0;
-    this.spawnX = x;
-    this.spawnY = y;
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
     this.duration = duration;
   }
   
@@ -20,10 +21,13 @@ class Sparkle extends AnimatedObject {
     
     sketch.noStroke();
     const opacity = (1 - (Math.random() * Math.random())) * (1 - progressRatio) * 100
-    sketch.fill(0, 0, 100, opacity);
-    const x = this.spawnX + Math.random() * Sparkle.getWiggleDistance();
-    const y = this.spawnY + Sparkle.getFallSpeed() * this.elapsedTime;
-    sketch.ellipse(x, y, 10 * getDistanceRatio(), 10 * getDistanceRatio());
+    const hue = 14 + Math.random() * 2;
+    const saturation = Math.random() * Math.random() * 100;
+    const brightness = 100;
+    sketch.fill(hue, saturation, brightness, opacity);
+    this.x = this.x + (Math.random()-0.5) * Sparkle.wiggleDistance / getDistanceRatio();
+    this.y = this.y + (Math.random()-0.2) * 2 * Sparkle.fallSpeed / getDistanceRatio() * deltaT;
+    sketch.ellipse(this.x, this.y, this.radius / getDistanceRatio(), this.radius / getDistanceRatio());
     return false;
   }
 }
