@@ -1,0 +1,41 @@
+<html>
+
+<head>
+  <title>Posenet</title>
+  <meta name="author" content="AIM Labs">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="/javascripts/services.js"></script>
+</head>
+
+<body>
+  <header>
+    <h1>Posenet</h1>
+  </header>
+
+  <main class="two-col">
+    <section id="operations-container">
+      <h2>Operations:</h2>
+      <div class="scrollbox">
+        <form id="say-hello">
+          <h3>Say hello</h3>
+          <div>
+            <label for="hello">Hello message:</label>
+            <input id="hello" name="hello">
+          </div>
+          <input type="submit" value="Say hello">
+        </form>
+
+      </div>
+    </section>
+    <section>
+      <h2>Response:</h2>
+      <div class="scrollbox">
+        <pre id="response" class="teletype"></pre>
+      </div>
+    </section>
+  </main>
+</body>
+
+</html>

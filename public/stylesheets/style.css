@@ -1,0 +1,121 @@
+/* Disclaimer: This is not an example of excellent CSS */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  --light-border: 1px solid lightgray;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: rgba(0,0,0,.8);
+  color: white;
+}
+
+/* customize scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 12px;  /* for vertical scrollbars */
+  height: 12px; /* for horizontal scrollbars */
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+body {
+  height: 100vh;
+  padding: 2vw;
+  flex-direction: column;
+  display: flex;
+}
+
+main {
+  flex-grow: 1;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+main > * {
+  flex: 1 1 320px;
+  margin: 1%;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+}
+
+section .scrollbox {
+  flex: 1 0 50vh;
+}
+
+form {
+  border: var(--light-border);
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: rgba(255,255,255,.1);
+}
+
+form > div {
+  display: flex;
+  flex-direction: column;
+}
+
+form > * {
+  margin: 0.3em 0;
+}
+
+form h3 {
+  margin-top: 0;
+}
+
+textarea {
+  resize: none;
+  height: 3rem;
+}
+
+input, textarea {
+  border: var(--light-border);
+}
+
+input[type="submit"] {
+  font-weight: bold;
+}
+
+.scrollbox {
+  box-shadow: 0 0 0 1px #fff; /* add border but border is broken */
+  padding: 3%;
+  overflow-y: scroll;
+}
+
+.teletype {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+input:hover:not(:focus) {
+  box-shadow: inset 0 0 100px 100px rgba(238, 251, 50, 0.15);
+}
+
+input[type="submit"] {
+  background: rgba(0,0,0,.05);
+  color: white;
+  font-size: 100%;
+  line-height: 200%;
+}
+
+input[type="submit"]:hover {
+  cursor: pointer;
+  box-shadow: inset 0 0 100px 100px rgba(50, 251, 93, 0.15);
+}
+
+@keyframes flash {
+  from {background-color: rgba(255, 255, 0, 0.3)}
+  to {background-color: rgba(255, 255, 0, 0)}
+}
+
+.flashing {
+  animation: flash 0.3s;
+}
