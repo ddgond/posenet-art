@@ -53,16 +53,18 @@ const p5config = (sketch) => {
     static stopMovingSpeedCutoff = 2;
     static timeToDetectStop = 0.15 * 1000; // milliseconds
     static angleToChangeDirection = 60; // degrees
+    static crossCenterThreshold = 10; // some arbitrary distance unit
     
     constructor(name, pairName, bodyCenter) {
       this.name = name;
       this.pairName = pairName;
-      this.bodyCenterPosition = bodyCenterPosition;
+      this.bodyCenterPosition = bodyCenter;
       this.x = 0;
       this.y = 0;
       this.smoothVelocity = {x:0,y:0}; // Weighted average of velocities
       this.isMoving = false;
-      this.stillTime = 0;
+      this.stillTime = 0; // Time spent not moving
+      this.rightOfCenter = false;
     }
     
     get speed() {
@@ -117,10 +119,18 @@ const p5config = (sketch) => {
       const dotProduct = previousVelocity.x * this.smoothVelocity.x + previousVelocity.y * this.smoothVelocity.y;
       const prevMagnitude = Math.sqrt(Math.pow(previousVelocity.x,2) + Math.pow(previousVelocity.y,2));
       const currentMagnitude = this.speed;
-      const angle = Math.acos(dotProduct / (prevMagnitude * currentMagnitude)) / pi * 180;
+      const angle = Math.acos(dotProduct / (prevMagnitude * currentMagnitude)) / Math.pi * 180;
       
       if (this.isMoving && angle > Keypoint.angleToChangeDirection) {
         triggerListeners(this, EventType.ChangeDirection);
+      }
+      
+      if (!this.rightOfCenter && this.x > this.bodyCenterPosition.x + Keypoint.crossCenterThreshold * normWidthFactor / webcamSize().width) {
+        this.rightOfCenter = true;
+        triggerListeners(this, EventType.CrossBody);
+      } else if (this.rightOfCenter && this.x < this.bodyCenterPosition.x - Keypoint.crossCenterThreshold * normWidthFactor / webcamSize().width) {
+        this.rightOfCenter = false;
+        triggerListeners(this, EventType.CrossBody);
       }
       
       triggerListeners(this, EventType.Update);
@@ -128,6 +138,7 @@ const p5config = (sketch) => {
   }
   
   let poses = [];
+  const bodyCenterPosition = {x:0,y:0};
   const keypointState = {
     'nose': new Keypoint('nose', null, bodyCenterPosition),
     'leftEye': new Keypoint('leftEye', 'rightEye', bodyCenterPosition),
@@ -159,12 +170,15 @@ const p5config = (sketch) => {
     const deltaT = currentTime - lastTime;
     poses = results.map(item => item.pose);
     if (poses[0]) {
-      const keypoints = poses[0].keypoints;
+      const keypoints = poses[0].keypoints.filter(keypoint => keypoint.score > 0.2);
+      bodyCenterPosition.x = 0;
+      bodyCenterPosition.y = 0;
       for (let i = 0; i < keypoints.length; i++) {
         const keypoint = keypoints[i];
-        if (keypoint.score > 0.2) {
-          keypointState[keypoint.part].updatePosition(keypoint.position, deltaT);
-        }
+        keypointState[keypoint.part].updatePosition(keypoint.position, deltaT);
+        // Average keypoint positions to define center
+        bodyCenterPosition.x += keypoint.position.x / keypoints.length;
+        bodyCenterPosition.y += keypoint.position.y / keypoints.length;
       }
     }
   });
