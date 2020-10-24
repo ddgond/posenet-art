@@ -1,4 +1,4 @@
-class Sparkle extends AnimatedObject {
+class Sparkle extends DrawingEngine.AnimatedObject {
   static fallSpeed = 40 / 1000; // per ms
   static wiggleDistance = 60;
   
@@ -11,7 +11,7 @@ class Sparkle extends AnimatedObject {
     this.duration = duration;
   }
   
-  draw(sketch, deltaT, keypointState) {
+  draw(sketch, deltaT) {
     this.elapsedTime += deltaT;
     if (this.elapsedTime > this.duration) {
       return true; // Done
@@ -25,9 +25,9 @@ class Sparkle extends AnimatedObject {
     const saturation = Math.random() * Math.random() * 100;
     const brightness = 100;
     sketch.fill(hue, saturation, brightness, opacity);
-    this.x = this.x + (Math.random()-0.5) * Sparkle.wiggleDistance / getDistanceRatio();
-    this.y = this.y + (Math.random()-0.2) * 2 * Sparkle.fallSpeed / getDistanceRatio() * deltaT;
-    sketch.ellipse(this.x, this.y, this.radius / getDistanceRatio(), this.radius / getDistanceRatio());
+    this.x = this.x + (Math.random()-0.5) * Sparkle.wiggleDistance / DrawingEngine.getDistanceRatio();
+    this.y = this.y + (Math.random()-0.2) * 2 * Sparkle.fallSpeed / DrawingEngine.getDistanceRatio() * deltaT;
+    sketch.ellipse(this.x, this.y, this.radius / DrawingEngine.getDistanceRatio(), this.radius / DrawingEngine.getDistanceRatio());
     return false;
   }
 }
