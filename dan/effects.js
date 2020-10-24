@@ -4,10 +4,10 @@ class Sparkle extends DrawingEngine.AnimatedObject {
   
   constructor(x, y, radius, duration) {
     super();
-    this.elapsedTime = 0;
     this.x = x;
     this.y = y;
     this.radius = radius;
+    this.elapsedTime = 0;
     this.duration = duration;
   }
   
@@ -58,10 +58,72 @@ class KeypointDebugger extends DrawingEngine.AnimatedObject {
   }
 }
 
+class CloudPoof extends DrawingEngine.AnimatedObject {
+  constructor(x, y, r, xVel, yVel) {
+    super();
+    this.x = x;
+    this.y = y;
+    this.xVel = xVel;
+    this.yVel = yVel;
+    this.r = r;
+    this.elapsedTime = 0;
+    this.duration = 2000;
+    this.numSides = Math.floor(Math.random() * 5) + 5 // 5,6,7,8,9-sided poofs
+    this.vertices = [];
+    this.generateVertices();
+  }
+  
+  generateVertices() {
+    const anglePerIter = 2 * Math.PI / this.numSides;
+    const randomMult = () => Math.random() * 0.3 + 0.85
+    for (let i = 0; i < this.numSides; i++) {
+      this.vertices.push({angle: anglePerIter * i, distance: this.r * randomMult()})
+    }
+  }
+  
+  draw(sketch, deltaT) {
+    this.elapsedTime += deltaT;
+    if (this.elapsedTime > this.duration) {
+      return true; // Done
+    }
+    
+    const progressRatio = this.elapsedTime / this.duration;
+    
+    const hue = Math.random() * 5;
+    const saturation = Math.random() * 15 + 30;
+    const brightness = Math.random() * 15 + 10;
+    const opacity = Math.random() * 30 + 70;
+    sketch.fill(hue, saturation, brightness, opacity);
+    sketch.noStroke()
+    sketch.beginShape();
+    this.vertices.forEach(vertex => {
+      const xyResults = this.vertexToXY(vertex, progressRatio);
+      sketch.vertex(xyResults.x, xyResults.y);
+    });
+    sketch.endShape();
+    
+    this.x += this.xVel;
+    this.y += this.yVel;
+  }
+  
+  sizeMultiplier(progressRatio) {
+    return -4 * (progressRatio) * (progressRatio - 1);
+  }
+  
+  vertexToXY(vertex, progressRatio) {
+    const angle = vertex.angle;
+    const distance = vertex.distance;
+    const xOffset = Math.sin(angle) * distance * this.sizeMultiplier(progressRatio);
+    const yOffset = Math.cos(angle) * distance * this.sizeMultiplier(progressRatio);
+    return {x: this.x + xOffset / DrawingEngine.getDistanceRatio(), y: this.y + yOffset / DrawingEngine.getDistanceRatio()};
+  }
+}
+
 class FireWithSmoke extends DrawingEngine.AnimatedObject {
   static itersPerFlame = 16; // how many in-out-edges per side
   static rotationSpeed = Math.PI / 1000; // How far to advance per ms
   static windOscillation = 0.2; // How much to oscillate without wind as a function of radius
+  static poofRate = 10; // How many poofs per second on average
   
   static generateFlameEdgeVertices = (x, y) => {
     const vertices = [];
@@ -107,10 +169,32 @@ class FireWithSmoke extends DrawingEngine.AnimatedObject {
     this.target = keypoint;
   }
   
+  shouldGeneratePoof(deltaT) {
+    // Poisson distribution
+    const lambda = FireWithSmoke.poofRate * deltaT / 1000;
+    const probability = lambda / Math.E;
+    return Math.random() < probability;
+  }
+  
+  generatePoof() {
+    const initialCloudY = -3;
+    const randomOffset = () => Math.random() * this.r * 2 - this.r;
+    const randomXSpeed = () => Math.random() * this.r / 20 - this.r / 40;
+    if (this.target) {
+      DrawingEngine.addAnimatedObject(new CloudPoof(this.target.x + randomOffset(), this.target.y - this.r + randomOffset(), this.r * 0.75, randomXSpeed() + this.target.normVelocity.x * 1000 / 10, this.target.normVelocity.y * 1000 / 10 + initialCloudY));
+    } else {
+      DrawingEngine.addAnimatedObject(new CloudPoof(this.x + randomOffset(), this.y - this.r + randomOffset(), this.r * 0.75, randomXSpeed(), initialCloudY));
+    }
+  }
+  
   draw(sketch, deltaT) {
     this.rotateEdgeVertices(deltaT);
     this.updateWind();
-    sketch.fill(95, 80, 100);
+    const hue = Math.random() * 5;
+    const saturation = Math.random() * 5 + 95;
+    const brightness = Math.random() * 5 + 95;
+    const opacity = Math.random() * 15 + 85;
+    sketch.fill(hue, saturation, brightness, opacity);
     sketch.noStroke()
     sketch.beginShape();
     this.flameEdgeVertices.forEach(vertex => {
@@ -118,7 +202,10 @@ class FireWithSmoke extends DrawingEngine.AnimatedObject {
       sketch.vertex(xyResults.x, xyResults.y);
     });
     sketch.endShape();
-    sketch.fill(50,100,100,50);
+    if (this.shouldGeneratePoof(deltaT)) {
+      this.generatePoof()
+    }
+    // sketch.fill(50,100,100,50);
     // sketch.circle(this.x, this.y, this.r * 2); // Debug circle for sizing
     return this.done;
   }

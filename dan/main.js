@@ -23,8 +23,8 @@ const clapToFireHandsListener = new PosenetEngine.EventListener('leftWrist', Pos
       leftHandFire = null;
       rightHandFire = null;
     } else {
-      leftHandFire = new FireWithSmoke(keypoint.x, keypoint.y, 40);
-      rightHandFire = new FireWithSmoke(data.collider.x, data.collider.y, 40);
+      leftHandFire = new FireWithSmoke(keypoint.x, keypoint.y, 60 / DrawingEngine.getDistanceRatio());
+      rightHandFire = new FireWithSmoke(data.collider.x, data.collider.y, 60 / DrawingEngine.getDistanceRatio());
       leftHandFire.setTarget(keypoint);
       rightHandFire.setTarget(data.collider);
       DrawingEngine.addAnimatedObject(leftHandFire);
@@ -35,6 +35,6 @@ const clapToFireHandsListener = new PosenetEngine.EventListener('leftWrist', Pos
 
 PosenetEngine.addListener(clapToFireHandsListener);
 
-// const fire = new FireWithSmoke(300, 300, 40)
-// DrawingEngine.addAnimatedObject(fire)
+// const fire = new FireWithSmoke(300, 300, 40);
+// DrawingEngine.addAnimatedObject(fire);
 // fire.setWind(-40, 10)
