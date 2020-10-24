@@ -8,4 +8,33 @@ const clapToSparkleListener = new PosenetEngine.EventListener('leftWrist', Posen
   }
 });
 
-PosenetEngine.addListener(clapToSparkleListener);
+// PosenetEngine.addListener(clapToSparkleListener);
+
+// DrawingEngine.addAnimatedObject(new KeypointDebugger());
+
+let leftHandFire = null;
+let rightHandFire = null;
+
+const clapToFireHandsListener = new PosenetEngine.EventListener('leftWrist', PosenetEngine.EventType.Collision, (keypoint, data) => {
+  if (data.collider.name === 'rightWrist') {
+    if (leftHandFire) {
+      leftHandFire.remove();
+      rightHandFire.remove();
+      leftHandFire = null;
+      rightHandFire = null;
+    } else {
+      leftHandFire = new FireWithSmoke(keypoint.x, keypoint.y, 40);
+      rightHandFire = new FireWithSmoke(data.collider.x, data.collider.y, 40);
+      leftHandFire.setTarget(keypoint);
+      rightHandFire.setTarget(data.collider);
+      DrawingEngine.addAnimatedObject(leftHandFire);
+      DrawingEngine.addAnimatedObject(rightHandFire);
+    }
+  }
+});
+
+PosenetEngine.addListener(clapToFireHandsListener);
+
+// const fire = new FireWithSmoke(300, 300, 40)
+// DrawingEngine.addAnimatedObject(fire)
+// fire.setWind(-40, 10)
