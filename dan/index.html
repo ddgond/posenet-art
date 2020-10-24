@@ -7,9 +7,29 @@
   <body>
     <script src="ml5.min.js"></script>
     <script src="p5.min.js"></script>
+    <script src="https://code.createjs.com/1.0.0/soundjs.min.js"></script>
+    <script src="sounds.js"></script>
+    <script>
+    startedBackSound = false;
+    function startSound() {
+      if (!startedBackSound){
+        backSoundInstance = createjs.Sound.play(nameSoundMap.backSound, {loop:-1, volume:1});
+        startedBackSound = true;
+      }
+    }
+
+    function stopSound() {
+      backSoundInstance.pause();
+    }
+
+    </script>
     <script src="drawingEngine.js"></script>
     <script src="posenetEngine.js"></script>
     <script src="effects.js"></script>
     <script src="main.js"></script>
+
+
+    <button onclick="stopSound()">Stop background music</button>
+
   </body>
 </html>

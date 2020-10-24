@@ -10,7 +10,7 @@ const DrawingEngine = (() => {
   const normWidthFactor = 1280; // Arbitrary number to allow us to define units of distance consistently independent of window size
 
   const animatedObjects = [];
-  
+
   const getWebcamRatio = () =>
     document.querySelector("video").videoWidth /
     document.querySelector("video").videoHeight;
@@ -27,14 +27,15 @@ const DrawingEngine = (() => {
       };
     }
   };
-  
+
   // multiply by this to get scaled relative coordinates from absolute coordinates
   // divide by this to get absolute coordinates from scaled relative coordinates
   const getDistanceRatio = () => normWidthFactor / webcamSize().width;
-  
+
   let webcam = null;
 
   const p5config = (sketch) => {
+
     webcam = sketch.createCapture(sketch.VIDEO);
     webcam.hide();
 
@@ -52,6 +53,7 @@ const DrawingEngine = (() => {
     };
 
     sketch.draw = () => {
+
       const currentTime = new Date().getTime();
       const deltaT = currentTime - lastTime;
       lastTime = currentTime;
@@ -78,7 +80,7 @@ const DrawingEngine = (() => {
   };
 
   new p5(p5config);
-  
+
   return {
     AnimatedObject: AnimatedObject,
     getDistanceRatio: getDistanceRatio,
