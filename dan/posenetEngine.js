@@ -38,6 +38,7 @@ const PosenetEngine = (() => {
 
     constructor(name, bodyCenter) {
       this.name = name;
+      this.score = 0;
       this.bodyCenterPosition = bodyCenter;
       this.x = 0;
       this.y = 0;
@@ -86,6 +87,10 @@ const PosenetEngine = (() => {
       triggerListeners(this, EventType.ExitCollision, {
         collider: otherKeypoint,
       });
+    }
+    
+    updateScore(score) {
+      this.score = score
     }
 
     updatePosition(position, deltaT) {
@@ -179,30 +184,22 @@ const PosenetEngine = (() => {
     rightAnkle: new Keypoint("rightAnkle", bodyCenterPosition),
   };
 
-  const poseNet = ml5.poseNet(
+  const posenet = ml5.poseNet(
     DrawingEngine.webcam,
-    {
-      imageScaleFactor: 0.1,
-      outputStride: 16,
-      flipHorizontal: false,
-      minConfidence: 0.5,
-      maxPoseDetections: 5,
-      scoreThreshold: 0.5,
-      nmsRadius: 20,
-      detectionType: "single",
-      multiplier: 0.75,
-    },
     () => {
-      console.log("poseNet loaded successfully");
+      console.log("Posenet model loaded");
     }
   );
 
   let lastPoseTime = new Date().getTime();
-  poseNet.on("pose", (results) => {
+  posenet.on("pose", (results) => {
     const currentTime = new Date().getTime();
     const deltaT = currentTime - lastPoseTime;
     const poses = results.map((item) => item.pose);
     if (poses[0]) {
+      poses[0].keypoints.forEach(keypoint => {
+        keypointState[keypoint.part].updateScore(keypoint.score);
+      })
       const keypoints = poses[0].keypoints.filter(
         (keypoint) => keypoint.score > 0.2
       );
