@@ -19,7 +19,11 @@
     }
 
     function stopSound() {
-      backSoundInstance.pause();
+      if (backSoundInstance.paused){
+        backSoundInstance.paused = false;
+      } else {
+        backSoundInstance.paused = true;
+      }
     }
 
     </script>
@@ -29,7 +33,7 @@
     <script src="main.js"></script>
 
 
-    <button onclick="stopSound()">Stop background music</button>
+    <button onclick="stopSound()">Toggle background music</button>
 
   </body>
 </html>
