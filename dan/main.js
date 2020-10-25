@@ -19,6 +19,9 @@ let rightHandFire = null;
 
 const clapToFireHandsListener = new PosenetEngine.EventListener('leftWrist', PosenetEngine.EventType.Collision, (keypoint, data) => {
   if (data.collider.name === 'rightWrist') {
+    startSound(); // first time you clap it will start background music
+    createjs.Sound.play(nameSoundMap.matchSound, {volume:.8});
+    createjs.Sound.play(nameSoundMap.fireSound, {volume:0.5});
     if (leftHandFire) {
       leftHandFire.remove();
       rightHandFire.remove();

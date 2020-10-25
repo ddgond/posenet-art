@@ -1,9 +1,13 @@
 const nameSoundMap = {
   clapSound : "clapSound",
+  matchSound : "matchSound",
+  fireSound : "fireSound",
   backSound : "backSound",
 }
 const pathSoundMap = {
   clapSound : "Music/glitch/Distortion 3.mp3",
+  matchSound : "Music/fire/matches-2.mp3",
+  fireSound : "Music/fire/fire.mp3",
   backSound : "Music/long/music1.mp3"
 }
 
