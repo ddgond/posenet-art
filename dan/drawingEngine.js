@@ -86,6 +86,9 @@ const DrawingEngine = (() => {
     getDistanceRatio: getDistanceRatio,
     addAnimatedObject: (ao) => {
       animatedObjects.push(ao);
+      if (ao.onAdd) {
+        ao.onAdd();
+      }
     },
     removeAnimatedObject: (ao) => {
       animatedObjects.splice(animatedObjects.indexOf(ao), 1);

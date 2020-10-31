@@ -153,6 +153,14 @@ class FireWithSmoke extends DrawingEngine.AnimatedObject {
     this.done = false;
   }
   
+  onAdd() {
+    startSound(); // after first clap it will start background music
+    if (allSoundOn){
+      createjs.Sound.play(nameSoundMap.matchSound, {volume:.8});
+      createjs.Sound.play(nameSoundMap.fireSound, {volume:0.5});
+    }
+  }
+  
   setWind(xSpeed, ySpeed) {
     this.xWind = xSpeed;
     this.yWind = ySpeed;
