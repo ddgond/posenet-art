@@ -17,9 +17,14 @@
     allSoundOn = true;
     backSoundInstance = null;
     function startSound() {
-      if (!startedBackSound){
+      var link = document.getElementById('backSounds');
+        
+      if (!startedBackSound ){
         backSoundInstance = createjs.Sound.play(nameSoundMap.backSound, {loop:-1, volume:1});
         startedBackSound = true;
+        if (!link.checked){
+          backSoundInstance.paused = true;
+        }
       }
     }
 
