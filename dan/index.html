@@ -37,12 +37,21 @@
       if (allSoundOn){
         allSoundOn = false;
         if (backSoundInstance){
-          backSoundInstance.paused = true;
+          //backSoundInstance.paused = true;
+          var link = document.getElementById('backSounds');
+          if (link.checked){
+            link.click();
+          }
+
         }
       } else {
         allSoundOn = true;
         if (backSoundInstance){
-          backSoundInstance.paused = false;
+          var link = document.getElementById('backSounds');
+          if (!link.checked){
+            link.click();
+          }
+          //backSoundInstance.paused = false;
       }
       }
     }
