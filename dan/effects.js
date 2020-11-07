@@ -38,7 +38,7 @@ class KeypointDebugger extends DrawingEngine.AnimatedObject {
   }
   
   draw(sketch, deltaT) {
-    const keypoints = Object.values(PosenetEngine.keypointState);
+    const keypoints = Object.values(PoseEngine.keypointState);
     keypoints
       .filter(keypoint => keypoint.score > 0.2)
       .forEach((keypoint) => {
@@ -151,14 +151,29 @@ class FireWithSmoke extends DrawingEngine.AnimatedObject {
     this.flameEdgeVertices = FireWithSmoke.generateFlameEdgeVertices(x, y);
     this.target = null;
     this.done = false;
+    this.matchSound = new Tone.Player({
+      url:'music/fire/matches.mp3',
+      autostart: true,
+    }).toDestination();
+    this.fireSound = new Tone.Player({
+      url:'music/fire/fire.mp3',
+      autostart: true,
+      loop: true,
+      loopStart: 0.45,
+      loopEnd: 2.5
+    }).toDestination();
   }
   
-  onAdd() {
-    startSound(); // after first clap it will start background music
-    if (allSoundOn){
-      createjs.Sound.play(nameSoundMap.matchSound, {volume:.8});
-      createjs.Sound.play(nameSoundMap.fireSound, {volume:0.5});
-    }
+  onRemove() {
+    this.matchSound.start();
+    this.matchSound.onstop = () => {
+      this.matchSound.dispose();
+    };
+    this.fireSound.loop = false;
+    this.fireSound.seek(2.5);
+    this.fireSound.onstop = () => {
+      this.fireSound.dispose();
+    };
   }
   
   setWind(xSpeed, ySpeed) {

@@ -53,7 +53,6 @@ const DrawingEngine = (() => {
     };
 
     sketch.draw = () => {
-
       const currentTime = new Date().getTime();
       const deltaT = currentTime - lastTime;
       lastTime = currentTime;
@@ -70,6 +69,9 @@ const DrawingEngine = (() => {
       for (let i = 0; i < doneAnimObjects.length; i++) {
         const doneAnimObj = doneAnimObjects[i];
         animatedObjects.splice(animatedObjects.indexOf(doneAnimObj), 1);
+        if (doneAnimObj.onRemove) {
+          doneAnimObj.onRemove();
+        }
       }
     };
 
@@ -92,6 +94,9 @@ const DrawingEngine = (() => {
     },
     removeAnimatedObject: (ao) => {
       animatedObjects.splice(animatedObjects.indexOf(ao), 1);
+      if (ao.onRemove) {
+        ao.onRemove();
+      }
     },
     webcam: webcam
   };

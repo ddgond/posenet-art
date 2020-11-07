@@ -45,3 +45,7 @@
 .toggle:checked:before {
   left: 32px;
 }
+
+label {
+  text-align: center;
+}

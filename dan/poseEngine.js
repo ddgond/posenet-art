@@ -1,4 +1,4 @@
-const PosenetEngine = (() => {
+const PoseEngine = (() => {
   const EventType = {
     Update: 0, // e.g. any change whatsoever, called when on('pose') happens
     StartMoving: 1, // e.g. hand starts moving
