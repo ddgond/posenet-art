@@ -160,7 +160,8 @@ class FireWithSmoke extends DrawingEngine.AnimatedObject {
       autostart: true,
       loop: true,
       loopStart: 0.45,
-      loopEnd: 2.5
+      loopEnd: 2.5,
+      volume: -5
     }).toDestination();
   }
   

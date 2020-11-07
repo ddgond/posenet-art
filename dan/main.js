@@ -22,13 +22,33 @@ const main = () => {
     document.querySelector('#enableSound').removeEventListener("click", enableSound);
     
     // Background Music
-    // TODO add event listeners to checkboxes
+    const musicDropdown = document.getElementById('list');
     const backgroundMusicCheckbox = document.getElementById('backSounds');
-    const backgroundMusic = new Tone.Player({
-      url:'music/long/music1.mp3',
-      autostart: backgroundMusicCheckbox.checked,
-      loop: true,
-    }).toDestination();
+
+    musicDropdown.addEventListener('change', getSelectValue)
+    backgroundMusicCheckbox.addEventListener('change', toggleBackgroundSound);
+
+    var selectedBackMusic = musicDropdown.value;
+
+    backgroundMusic = new Tone.Player({
+              url:`music/long/${selectedBackMusic}.mp3`,
+              autostart: backgroundMusicCheckbox.checked,
+              loop: true,
+          }).toDestination();
+
+    function getSelectValue()
+          {
+            selectedBackMusic = document.getElementById("list").value;
+            console.log(selectedBackMusic);
+            backgroundMusic.stop();
+            backgroundMusic = new Tone.Player({
+              url:`music/long/${selectedBackMusic}.mp3`,
+              autostart: backgroundMusicCheckbox.checked,
+              loop: true,
+          }).toDestination();
+                  
+          }
+    
     function toggleBackgroundSound() {
       if (backgroundMusicCheckbox.checked) {
         backgroundMusic.start(0,backgroundMusic.immediate());
@@ -36,7 +56,8 @@ const main = () => {
         backgroundMusic.stop();
       }
     }
-    backgroundMusicCheckbox.addEventListener('change', toggleBackgroundSound);
+
+
     
     // Fire Effect
     let leftHandFire = null;
