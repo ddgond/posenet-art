@@ -40,6 +40,11 @@
     <div class="menu-div">
       <p id="settings"> <i class="fas fa-volume-off"></i> Sound Settings</p>
 
+      <!-- Master volume-->
+      <div class="menu-row">
+        <span style="padding-left:3px">Master volume: </span><input type="range" id="volumeSlider" min="-40" max="0" value="-100"/>
+      </div>
+    
       <!-- Background sound toggle-->
       <div class="menu-row">
         <table> <!-- use a table for vertical alignment -->
@@ -49,11 +54,7 @@
           </tr>
         </table>
       </div>
-    
-    
-      <!-- Enable Sound-->
-      <button type="button" id="enableSound">Enable Sound</button>
-  
+      
       <!-- Background sound selector-->
       <div class="menu-row">
         <span style="padding-left:3px"> <!-- extra padding to align with background sound -->

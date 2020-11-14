@@ -19,7 +19,14 @@ const main = () => {
 
   // Put all effects that require sound in here
   const enableSound = () => {
-    document.querySelector('#enableSound').removeEventListener("click", enableSound);
+    document.querySelector('#volumeSlider').removeEventListener("click", enableSound);
+    Tone.start();
+    
+    function setMasterVolume(e) {
+      Tone.Destination.volume.value = e.target.value;
+    }
+    Tone.Destination.volume.value = document.querySelector('#volumeSlider').value;
+    document.querySelector('#volumeSlider').addEventListener("change", setMasterVolume);
     
     // Background Music
     const musicDropdown = document.getElementById('list');
@@ -56,8 +63,6 @@ const main = () => {
         backgroundMusic.stop();
       }
     }
-
-
     
     // Fire Effect
     let leftHandFire = null;
@@ -82,5 +87,5 @@ const main = () => {
     PoseEngine.addListener(clapToFireHandsListener);
   }
 
-  document.querySelector('#enableSound').addEventListener("click", enableSound);
+  document.querySelector('#volumeSlider').addEventListener("click", enableSound);
 }
