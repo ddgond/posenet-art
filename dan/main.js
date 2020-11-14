@@ -26,7 +26,7 @@ const main = () => {
       Tone.Destination.volume.value = e.target.value;
     }
     Tone.Destination.volume.value = document.querySelector('#volumeSlider').value;
-    document.querySelector('#volumeSlider').addEventListener("change", setMasterVolume);
+    document.querySelector('#volumeSlider').addEventListener("input", setMasterVolume);
     
     // Background Music
     const musicDropdown = document.getElementById('list');
@@ -36,11 +36,19 @@ const main = () => {
     backgroundMusicCheckbox.addEventListener('change', toggleBackgroundSound);
 
     var selectedBackMusic = musicDropdown.value;
-
+    var backgroundMusic;
+    
+    const onBackgroundMusicLoad = () => {
+      if (backgroundMusicCheckbox.checked) {
+        backgroundMusic.start(0, backgroundMusic.immediate());
+      }
+    }
+    
     backgroundMusic = new Tone.Player({
               url:`music/long/${selectedBackMusic}.mp3`,
-              autostart: backgroundMusicCheckbox.checked,
+              autostart: false,
               loop: true,
+              onload: onBackgroundMusicLoad
           }).toDestination();
 
     function getSelectValue()
@@ -57,6 +65,9 @@ const main = () => {
           }
     
     function toggleBackgroundSound() {
+      if (!backgroundMusic.loaded) {
+        return;
+      }
       if (backgroundMusicCheckbox.checked) {
         backgroundMusic.start(0,backgroundMusic.immediate());
       } else {
