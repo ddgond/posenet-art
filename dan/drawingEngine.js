@@ -15,16 +15,24 @@ const DrawingEngine = (() => {
     document.querySelector("video").videoWidth /
     document.querySelector("video").videoHeight;
   const webcamSize = () => {
-    if (window.innerHeight * getWebcamRatio() > window.innerWidth) {
+    // this condition occurs before video permissions are loaded
+    if (isNaN(getWebcamRatio())) {
       return {
-        width: window.innerWidth,
-        height: window.innerWidth / getWebcamRatio(),
+        width: 0,
+        height: 0,
       };
-    } else {
-      return {
-        width: window.innerHeight * getWebcamRatio(),
-        height: window.innerHeight,
-      };
+    } else{
+      if (window.innerHeight * getWebcamRatio() > window.innerWidth) {
+        return {
+          width: window.innerWidth*0.65,
+          height: window.innerWidth*0.65 / getWebcamRatio(),
+        };
+      } else {
+        return {
+          width: window.innerHeight*0.65 * getWebcamRatio(),
+          height: window.innerHeight*0.65,
+        };
+      }
     }
   };
 
@@ -47,9 +55,14 @@ const DrawingEngine = (() => {
 
     sketch.setup = () => {
       sketch.colorMode(sketch.HSB, 100);
-      sketch.createCanvas(window.innerWidth, window.innerHeight);
+      var myCanvas = sketch.createCanvas(webcamSize().width, webcamSize().height); 
+      myCanvas.parent("p5-canvas-div"); // id of div in HTML
       resizeWebcam();
       lastTime = new Date().getTime();
+    };
+
+    const resizeSketch = () => {
+      sketch.resizeCanvas(webcamSize().width, webcamSize().height);
     };
 
     sketch.draw = () => {
@@ -57,6 +70,7 @@ const DrawingEngine = (() => {
       const deltaT = currentTime - lastTime;
       lastTime = currentTime;
       resizeWebcam();
+      resizeSketch(); // force canvas to take on webcam sizing once video is loaded
       sketch.background(100);
       sketch.image(webcam, 0, 0, webcamSize().width, webcamSize().height);
       const doneAnimObjects = [];
@@ -76,7 +90,7 @@ const DrawingEngine = (() => {
     };
 
     sketch.windowResized = () => {
-      sketch.resizeCanvas(window.innerWidth, window.innerHeight);
+      sketch.resizeCanvas(webcamSize().width, webcamSize().height);
       resizeWebcam();
     };
   };

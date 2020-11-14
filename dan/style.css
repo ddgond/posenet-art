@@ -2,8 +2,8 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  width: 62px;
-  height: 32px;
+  width: 55px;
+  height: 25px;
   display: inline-block;
   position: relative;
   border-radius: 50px;
@@ -11,7 +11,7 @@
   outline: none;
   border: none;
   cursor: pointer;
-  background-color: #707070;
+  background-color: #A9A9A9;
   transition: background-color ease 0.3s;
 }
 
@@ -20,26 +20,26 @@
   display: block;
   position: absolute;
   z-index: 2;
-  width: 28px;
-  height: 28px;
-  background: #fff;
-  left: 2px;
-  top: 2px;
+  width: 25px;
+  height: 25px;
+  background: #FF00D8;
+  left: 0px;
+  top: 0px;
   border-radius: 50%;
   font: 10px/28px Helvetica;
   text-transform: uppercase;
   font-weight: bold;
-  text-indent: -22px;
-  word-spacing: 37px;
-  color: #fff;
-  text-shadow: -1px -1px rgba(0,0,0,0.15);
+  text-indent: -25px;
+  word-spacing: 34px;
+  color: black;
+  /* text-shadow: -1px -1px rgba(0,0,0,0.15); */
   white-space: nowrap;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  /* box-shadow: 0 1px 2px rgba(0,0,0,0.2); */
   transition: all cubic-bezier(0.3, 1.5, 0.7, 1) 0.3s;
 }
 
 .toggle:checked {
-  background-color: #4CD964;
+  background-color: #CAFFFE;
 }
 
 .toggle:checked:before {
@@ -47,6 +47,60 @@
 }
 
 label {
-  text-align: center;
+  text-align: left;
 }
 
+.p5Canvas {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  border-radius: 15px;
+}
+
+
+body{
+  font-family: 'Jura', sans-serif;
+  background-color: black;
+  color: red;
+}
+
+p{
+  margin: 0; /*remove default margins*/
+}
+
+.header-section {
+  font-family: 'Cabin Sketch', cursive;
+  width: 100%;
+  text-align: center;
+  font-size: 50px;
+  letter-spacing: 4px;
+  padding: 10px;
+  color: #CAFFFE;
+  text-shadow: 2px 2px 4px #FF00D8;
+}
+
+.subheader-section {
+  color: #CAFFFE;
+  width: 100%;
+  text-align: center;
+  font-size: 14px;
+  padding-bottom: 20px;
+}
+
+.menu-div {
+  padding-top: 20px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #CAFFFE;
+  font-size: 16px;
+}
+
+.menu-row {
+  padding-top: 10px;
+}
+
+#settings {
+  font-size: 18px;
+  color: #FF00D8;
+}
