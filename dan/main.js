@@ -23,7 +23,12 @@ const main = () => {
     Tone.start();
     
     function setMasterVolume(e) {
-      Tone.Destination.volume.value = e.target.value;
+      if (e.target.value === -40) {
+        Tone.Destination.volume.value = -200;
+      }
+      else {
+        Tone.Destination.volume.value = e.target.value;
+      }
     }
     Tone.Destination.volume.value = document.querySelector('#volumeSlider').value;
     document.querySelector('#volumeSlider').addEventListener("input", setMasterVolume);
