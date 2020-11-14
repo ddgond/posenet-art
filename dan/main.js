@@ -23,7 +23,7 @@ const main = () => {
     Tone.start();
     
     function setMasterVolume(e) {
-      if (e.target.value === -40) {
+      if (e.target.value <= -38) {
         Tone.Destination.volume.value = -200;
       }
       else {
