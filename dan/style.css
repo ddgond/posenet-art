@@ -89,7 +89,8 @@ p{
 
 .menu-div {
   padding-top: 20px;
-  max-width: 500px;
+  max-width: 350px;
+  padding-left: 20px;
   margin-left: auto;
   margin-right: auto;
   color: #CAFFFE;

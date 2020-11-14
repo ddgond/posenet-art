@@ -32,11 +32,12 @@ const main = () => {
     const musicDropdown = document.getElementById('list');
     const backgroundMusicCheckbox = document.getElementById('backSounds');
 
-    musicDropdown.addEventListener('change', getSelectValue)
+    musicDropdown.addEventListener('change', getSelectValue);
     backgroundMusicCheckbox.addEventListener('change', toggleBackgroundSound);
 
     var selectedBackMusic = musicDropdown.value;
     var backgroundMusic;
+
     
     const onBackgroundMusicLoad = () => {
       if (backgroundMusicCheckbox.checked) {
