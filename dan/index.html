@@ -22,7 +22,7 @@
     </style>
 
   </head>
-  <body onload="main()">
+  <body>
     <script src="ml5.min.js"></script>
     <script src="p5.min.js"></script>
     <script src="tone.js"></script>
@@ -41,7 +41,11 @@
 
     </div>
 
-    <div id="p5-canvas-div">
+    <div class="menu-div" id="startButton">
+      <button onclick="startEngine()">Start</button>
+    </div>
+    
+    <div id="p5-canvas-div" hidden>
     </div>
 
     <div class="menu-div">
@@ -49,7 +53,7 @@
 
       <!-- Master volume-->
       <div class="menu-row">
-        <span style="padding-left:1px">Master volume: </span><input type="range" id="volumeSlider" min="-40" max="0" value="-100"/>
+        <span style="padding-left:1px">Master volume: </span><input type="range" id="volumeSlider" min="-40" max="0" value="0"/>
 
       </div>
     
