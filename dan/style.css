@@ -106,5 +106,15 @@ p{
   color: #FF00D8;
 }
 
+.card-border {
+  border: 2px solid #FFADF3;
+  box-shadow: 0 0 10px 2px #FF00D8;
+}
+
+.card {
+  background-color: inherit;
+  color: #CAFFFE;
+}
+
 
 
