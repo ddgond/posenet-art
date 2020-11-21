@@ -1,3 +1,4 @@
+/***** INDEX.HTML *****/
 .toggle {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -60,7 +61,6 @@ label {
   border-radius: 15px;
 }
 
-
 body{
   font-family: 'Jura', sans-serif;
   background-color: black;
@@ -82,17 +82,26 @@ p{
   text-shadow: 2px 2px 4px #FF00D8;
 }
 
+.header-section a{
+  color: #CAFFFE;
+}
+
+.header-section a:hover{
+  text-shadow: 5px 5px 6px #FF00D8;
+  text-decoration: none;
+}
+
 .subheader-section {
   color: #CAFFFE;
   width: 100%;
   text-align: center;
   font-size: 14px;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
 }
 
 .menu-div {
   padding-top: 20px;
-  max-width: 350px;
+  max-width: 550px;
   padding-left: 20px;
   margin-left: auto;
   margin-right: auto;
@@ -108,17 +117,6 @@ p{
   font-size: 18px;
   color: #FF00D8;
 }
-
-.card-border {
-  border: 2px solid #FFADF3;
-  box-shadow: 0 0 10px 2px #FF00D8;
-}
-
-.card {
-  background-color: inherit;
-  color: #CAFFFE;
-}
-
 
 /* Style the collapsible that is used to open and close the collapsible content */
 .collapsible {
@@ -161,7 +159,7 @@ p{
   background-color: black;
   color: white;
   text-align: center;
-    box-shadow: 0 0 10px 2px #FF00D8;
+    box-shadow: 0 0 10px 5px #FF00D8;
 
 }
 
@@ -199,6 +197,7 @@ p{
   transform: translate(-50%, -50%);
 }
 
+/**** button formatting on index.html ****/
 /* class applies to select element itself, not a wrapper element */
 .list {
   display: inline;
@@ -275,4 +274,49 @@ p{
 
 .list:disabled:hover, .list[aria-disabled=true] {
   border-color: #CAFFFE;
+}
+
+
+/***** ABOUT.HTML *****/
+.card-border {
+  border: 2px solid #FFADF3;
+  box-shadow: 0 0 5px 2px #FF00D8;
+}
+
+.card {
+  margin: auto;
+  float: none;
+  max-width: 200px;
+  background-color: inherit;
+  color: #CAFFFE;
+}
+
+.about-section {
+  padding: 20px;
+  text-align: center;
+  background-color: black;
+  color: #FF00D8;
+}
+
+.about-section-text {
+  max-width: 600px;
+  margin: auto;
+  padding: 5px;
+  text-align: left;
+  background-color: black;
+  color: #CAFFFE;
+}
+
+.about-section-text p{
+  padding-bottom: 20px;
+}
+
+.developer-section {
+  max-width: 700px;
+  margin: auto;
+  padding: 5px;
+}
+
+.icon {
+  color: #FF00D8;
 }

@@ -1,127 +1,100 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Posenet</title>
-       <style>
-		body {
-		  font-family: Arial, Helvetica, sans-serif;
-		  margin: 0;
-		}
 
-		html {
-		  box-sizing: border-box;
-		}
+<head>
+  <meta charset="utf-8">
+  <title>Posenet</title>
 
-		*, *:before, *:after {
-		  box-sizing: inherit;
-		}
+  <!--Bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-		.column {
-		  float: left;
-		  width: 33.3%;
-		  margin-bottom: 16px;
-		  padding: 0 8px;
-		}
-		.about-section {
-		  padding: 40px;
-		  text-align: center;
-		  background-color: black;
-		  color: #FF00D8;
-		}
-		.about-section-text {
-		  padding: 5px;
-		  text-align: center;
-		  background-color: black;
-		  color: #CAFFFE;
-		}
-</style>
+  <!-- Custom CSS -->
+  <link rel="stylesheet" type="text/css" href="style.css" title="Default Styles" media="screen">
 
-    <!--Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-    <link rel="stylesheet" type="text/css"
-     href="style.css" title="Default Styles" media="screen">
-
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
     integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
     crossorigin="anonymous" />
 
-    <!-- Font (Jura) -->
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=Jura:wght@700&display=swap');
-      @import url('https://fonts.googleapis.com/css2?family=Cabin+Sketch&display=swap');
-    </style>
+  <!-- Font (Jura) -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Jura:wght@700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Cabin+Sketch&display=swap');
+  </style>
 
-  </head>
-  <body >
+</head>
 
+<body>
 
-
-    <div class="header-section">
-      <a href="/" class="header-section">PoseNet Art</a>
-    </div>
-    <div class="about-section">
-  	<h1>About</h1>
-  <div class="about-section-text">
-  	<p>PoseNet-Art is an interactive app where the user’s motion activates real-time animations and sounds. </p>
-  		<p>It is meant to be used for entertainment purposes.</p>
-  	<p>PoseNet-Art was created by three MIT students as part of the AI@MIT club in the Fall of 2020.</p>
+  <div class="header-section">
+    <a href="index.html">PoseNet Art</a>
   </div>
- 
-</div>
+  <div class="about-section">
+    <h1>About</h1>
+    <div class="about-section-text">
+      <p><i class="icon fas fa-paint-brush"></i> PoseNet Art is an interactive app where the user’s motion activates
+        real-time animations and sounds. It is meant to be used for creative and entertainment purposes.</p>
 
-<!-- Header -->
-<!-- <header class="bg-primary text-center py-3 mb-4">
-  <div class="container">
-    <h2 class="font-weight-light text-white">Meet the Team</h2>
+      <p><i class="icon fas fa-file-code"></i> We used a JavaScript library from <a href="https://ml5js.org/"
+          target="_blank">ml5.js</a>
+        to implement PoseNet, a machine learning model for real-time pose estimation. We used
+        <a href="https://p5js.org/" target="_blank">p5.js</a> to create animations and <a
+          href="https://tonejs.github.io/" target="_blank">Tone.js</a>
+        to create sound effects.</p>
+
+      <p><i class="icon fas fa-university"></i> PoseNet Art was created by three MIT students in the fall of 2020 as part of the
+        inaugural cohort of AI@MIT Labs.</p>
+    </div>
+
   </div>
-</header> -->
-<div class="about-section">
-  <h1>Meet the team</h1>
-</div>
 
-<!-- Page Content -->
-<div class="container">
-  <div class="row">
-    <!-- Team Member 1 -->
-    <div class="col-xl-4 col-md-6 mb-3">
-      <div class="card card-border shadow">
-        <img src="./imgs/daniel.png" class="card-img-top" alt="...">
-        <div class="card-body text-center">
-          <h5 class="card-title mb-0">Daniel Dangond</h5>
-          <div class="card-text text-black-50"> Developer</div>
+  <!-- Header -->
+
+  <div class="about-section">
+    <h1>Meet the Developers</h1>
+  </div>
+
+  <!-- Page Content -->
+  <div class="container developer-section">
+    <div class="row">
+      <!-- Team Member 1 -->
+      <div class="col-xl-4 col-md-6 mb-3">
+        <div class="card card-border shadow">
+          <img src="./imgs/daniel.png" class="card-img-top" alt="...">
+          <div class="card-body text-center">
+            <h5 class="card-title mb-0">Daniel Dangond</h5>
+            <!-- <div class="card-text text-black-50"> Developer</div> -->
+          </div>
         </div>
       </div>
-    </div>
-    <!-- Team Member 2 -->
-    <div class="col-xl-4 col-md-6 mb-3">
-      <div class="card card-border shadow">
-        <img src="./imgs/kathleen.png" class="card-img-top" alt="...">
-        <div class="card-body text-center">
-          <h5 class="card-title mb-0">Kathleen Esfahany</h5>
-          <div class="card-text text-black-50"> Developer</div>
+      <!-- Team Member 2 -->
+      <div class="col-xl-4 col-md-6 mb-3">
+        <div class="card card-border shadow">
+          <img src="./imgs/kathleen.png" class="card-img-top" alt="...">
+          <div class="card-body text-center">
+            <h5 class="card-title mb-0">Kathleen Esfahany</h5>
+            <!-- <div class="card-text text-black-50"> Developer</div> -->
+          </div>
         </div>
       </div>
-    </div>
-    <!-- Team Member 3 -->
-    <div class="col-xl-4 col-md-6 mb-3">
-      <div class="card card-border shadow">
-        <img src="./imgs/sanja.png" class="card-img-top" alt="...">
-        <div class="card-body text-center">
-          <h5 class="card-title mb-0">Sanja Simonovikj</h5>
-          <div class="card-text text-black-50"> Developer</div>
+      <!-- Team Member 3 -->
+      <div class="col-xl-4 col-md-6 mb-3">
+        <div class="card card-border shadow">
+          <img src="./imgs/sanja.png" class="card-img-top" alt="...">
+          <div class="card-body text-center">
+            <h5 class="card-title mb-0">Sanja Simonovikj</h5>
+            <!-- <div class="card-text text-black-50"> Developer</div> -->
+          </div>
         </div>
       </div>
+      <!-- /.row -->
+
     </div>
-  <!-- /.row -->
+    <!-- /.container -->
+    <br>
+    <br>
 
-</div>
-<!-- /.container -->
-<br>
-<br>
-
-  </body>
+</body>
 
 </html>
