@@ -7,6 +7,7 @@ const PoseEngine = (() => {
     Collision: 4, // e.g. right hand hits left hand, for claps, data is {collider: otherKeypoint} for object it collided with
     ExitCollision: 5, // e.g. right hand stops hitting left hand, data is {collider: otherKeypoint} for object it collided with
     CrossBody: 6, // e.g. right hand moves to left side of body
+    Raise: 7, // e.g. both hands are up in the air
   };
   class EventListener {
     constructor(keypointName, eventType, callback) {
@@ -88,7 +89,18 @@ const PoseEngine = (() => {
         collider: otherKeypoint,
       });
     }
-    
+
+    triggerRaise(otherKeypoint) {
+      this.activeCollisions.push(otherKeypoint.name);
+      triggerListeners(this, EventType.Raise, { raise: otherKeypoint });
+    }
+    removeRaise(otherKeypoint) {
+      this.activeCollisions.splice(
+        this.activeCollisions.indexOf(otherKeypoint.name),
+        1
+      );
+    }
+
     updateScore(score) {
       this.score = score
     }
@@ -163,6 +175,8 @@ const PoseEngine = (() => {
     }
   }
 
+
+
   const bodyCenterPosition = { x: 0, y: 0 };
   const keypointState = {
     nose: new Keypoint("nose", bodyCenterPosition),
@@ -211,6 +225,15 @@ const PoseEngine = (() => {
         bodyCenterPosition.x += keypoint.position.x / keypoints.length;
         bodyCenterPosition.y += keypoint.position.y / keypoints.length;
       }
+      const shoulderAverage = { x: 0, y: 0 }
+      for (let i = 0; i < keypoints.length; i++) {
+        const keypoint = keypoints[i];
+        if (keypoint.part === "leftShoulder" || keypoint.part === "rightShoulder"){
+          shoulderAverage.y += keypoint.position.y / 2;
+          shoulderAverage.x += keypoint.position.x /2;
+        }
+      }
+
       for (let i = 0; i < keypoints.length; i++) {
         const keypoint = keypoints[i];
         keypointState[keypoint.part].updatePosition(keypoint.position, deltaT);
@@ -219,6 +242,17 @@ const PoseEngine = (() => {
         const keypoint = keypointState[keypoints[i].part];
         for (let j = i + 1; j < keypoints.length; j++) {
           const otherKeypoint = keypointState[keypoints[j].part];
+/////////////////// RAISE HANDS TO SPARKLE CODE ///////////////////////////////////
+// console.log(Math.round(keypoint.y), Math.round(shoulderAverage.y));
+          if (keypoint.y < 0.9*shoulderAverage.y && otherKeypoint.y < 0.9*shoulderAverage.y){
+            keypoint.triggerRaise(otherKeypoint);
+            otherKeypoint.triggerRaise(keypoint);
+          }
+          else {
+            keypoint.removeRaise(otherKeypoint);
+            otherKeypoint.removeRaise(keypoint);
+          }
+//////////////////////////////////////////////////////////////////
           const distance =
             Math.sqrt(
               Math.pow(keypoint.x - otherKeypoint.x, 2) +

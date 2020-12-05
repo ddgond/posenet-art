@@ -1,6 +1,6 @@
 class Sparkle extends DrawingEngine.AnimatedObject {
-  static fallSpeed = 40 / 1000; // per ms
-  static wiggleDistance = 60;
+  static fallSpeed = 300 / 1000; // per ms
+  static wiggleDistance = 25;
   
   constructor(x, y, radius, duration) {
     super();
@@ -9,6 +9,21 @@ class Sparkle extends DrawingEngine.AnimatedObject {
     this.radius = radius;
     this.elapsedTime = 0;
     this.duration = duration;
+
+    this.raiseSound = new Tone.Player({
+      url:'music/glitch/sparkle.mp3',
+      autostart: true,
+      loop : false,
+      volume: -15,
+    }).toDestination();
+    // this.fireSound = new Tone.Player({
+    //   url:'music/fire/fire.mp3',
+    //   autostart: true,
+    //   loop: true,
+    //   loopStart: 0.45,
+    //   loopEnd: 2.5,
+    //   volume: -5
+    // }).toDestination();
   }
   
   draw(sketch, deltaT) {
@@ -21,7 +36,7 @@ class Sparkle extends DrawingEngine.AnimatedObject {
     
     sketch.noStroke();
     const opacity = (1 - (Math.random() * Math.random())) * (1 - progressRatio) * 100
-    const hue = 14 + Math.random() * 2;
+    const hue = 14 + Math.random() * 90;
     const saturation = Math.random() * Math.random() * 100;
     const brightness = 100;
     sketch.fill(hue, saturation, brightness, opacity);
@@ -30,7 +45,16 @@ class Sparkle extends DrawingEngine.AnimatedObject {
     sketch.ellipse(this.x, this.y, this.radius / DrawingEngine.getDistanceRatio(), this.radius / DrawingEngine.getDistanceRatio());
     return false;
   }
+
+  onRemove() {
+    this.raiseSound.onstop = () => {
+      this.raiseSound.dispose();
+    };
+    // this.raiseSound.loop = false;
+    // this.raiseSound.seek(2.5);
+  }
 }
+
 
 class KeypointDebugger extends DrawingEngine.AnimatedObject {
   constructor() {

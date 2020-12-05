@@ -41,6 +41,7 @@ const DrawingEngine = (() => {
   const getDistanceRatio = () => normWidthFactor / webcamSize().width;
 
   let webcam = null;
+  let started = false;
 
   const p5config = (sketch) => {
 
@@ -71,20 +72,22 @@ const DrawingEngine = (() => {
       lastTime = currentTime;
       resizeWebcam();
       resizeSketch(); // force canvas to take on webcam sizing once video is loaded
-      sketch.background(100);
-      sketch.image(webcam, 0, 0, webcamSize().width, webcamSize().height);
-      const doneAnimObjects = [];
-      for (let i = 0; i < animatedObjects.length; i++) {
-        const animObj = animatedObjects[i];
-        if (animObj.draw(sketch, deltaT)) {
-          doneAnimObjects.push(animObj);
+      sketch.background(0);
+      if (started) {
+        sketch.image(webcam, 0, 0, webcamSize().width, webcamSize().height);
+        const doneAnimObjects = [];
+        for (let i = 0; i < animatedObjects.length; i++) {
+          const animObj = animatedObjects[i];
+          if (animObj.draw(sketch, deltaT)) {
+            doneAnimObjects.push(animObj);
+          }
         }
-      }
-      for (let i = 0; i < doneAnimObjects.length; i++) {
-        const doneAnimObj = doneAnimObjects[i];
-        animatedObjects.splice(animatedObjects.indexOf(doneAnimObj), 1);
-        if (doneAnimObj.onRemove) {
-          doneAnimObj.onRemove();
+        for (let i = 0; i < doneAnimObjects.length; i++) {
+          const doneAnimObj = doneAnimObjects[i];
+          animatedObjects.splice(animatedObjects.indexOf(doneAnimObj), 1);
+          if (doneAnimObj.onRemove) {
+            doneAnimObj.onRemove();
+          }
         }
       }
     };
@@ -111,6 +114,9 @@ const DrawingEngine = (() => {
       if (ao.onRemove) {
         ao.onRemove();
       }
+    },
+    start: () => {
+      started = true;
     },
     webcam: webcam
   };
