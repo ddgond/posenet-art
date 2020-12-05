@@ -148,21 +148,16 @@ li {
 }
 
 .startButton {
-  /* box-shadow:inset 0px 1px 0px 0px #fbafe3; */
-  background:linear-gradient(to bottom, #ff5bb0 5%, #ef027d 100%);
-  /* background:linear-gradient(to bottom, #FF00D8 10%, #CAFFFE 100%); */
-  /* background-color:#FF00D8; */
+  background:linear-gradient(to bottom, #CAFFFE 19%, #FF00D8 100%);
   border-radius:23px;
-  /* border:2px solid #ee1eb5; */
   border:1px solid #CAFFFE;
   display:inline-block;
   cursor:pointer;
-  color:#CAFFFE;
-  /* color: black; */
+  color: black;
   font-family:Courier New;
-  font-size:15px;
+  font-size:18px;
   font-weight:bold;
-  padding:11px 42px;
+  padding:7px 30px;
   text-decoration:none;
   /* text-shadow:1px 1px 0px navy; */
 }
@@ -177,8 +172,7 @@ li {
 
 .center {
   margin: 0;
-/*  position: absolute;
-*/  top: 50%;
+  top: 50%;
   left: 50%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
