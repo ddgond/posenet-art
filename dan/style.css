@@ -71,6 +71,10 @@ p{
   margin: 0; /*remove default margins*/
 }
 
+a:hover {
+  text-decoration: none;
+}
+
 .header-section {
   font-family: 'Cabin Sketch', cursive;
   width: 100%;
@@ -113,71 +117,49 @@ p{
   padding-top: 10px;
 }
 
-#settings {
-  font-size: 18px;
-  color: #FF00D8;
-}
-
 /* Style the collapsible that is used to open and close the collapsible content */
 .collapsible {
-  text-align: center;
-  background-color: black;
-  color: #FF00D8;
-/*  cursor: pointer;
-  padding: 5px;*/
-  width: 20%;
-  border: none;
-  outline: none;
-  font-size: 16px;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0;
-
+  text-align: center;  
 }
 
-/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-.active, .collapsible:hover {
-  background-color: black;
+.collapsible a{
+  color: #FF00D8 !important; 
+  cursor: pointer;
+  width: 20%;
+  border: none;
+  font-size: 18px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Style the collapsible content. Note: hidden by default */
 .content {
-  padding: 5 20px;
-  display: none;
-  overflow: hidden;
-  text-align: center;
-  background-color: black;
-  color: #CAFFFE;
+  text-align: left;
+  color: #CAFFFE !important;
+  font-size: 15px;
 }
 
+ol {
+  padding-left: 13px;
+}
 
-.footer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  background-color: black;
-  color: white;
-  text-align: center;
-    box-shadow: 0 0 10px 5px #FF00D8;
-
+li {
+  padding-bottom: 5px;
 }
 
 .startButton {
-  box-shadow:inset 0px 1px 0px 0px #fbafe3;
-  background:linear-gradient(to bottom, #ff5bb0 5%, #ef027d 100%);
-  background-color:#FF00D8;
+  background:linear-gradient(to bottom, #CAFFFE 19%, #FF00D8 100%);
   border-radius:23px;
-  border:2px solid #ee1eb5;
+  border:1px solid #CAFFFE;
   display:inline-block;
   cursor:pointer;
-  color:#CAFFFE;
+  color: black;
   font-family:Courier New;
-  font-size:15px;
+  font-size:18px;
   font-weight:bold;
-  padding:11px 42px;
+  padding:7px 30px;
   text-decoration:none;
-  text-shadow:0px 1px 0px #c70067;
+  /* text-shadow:1px 1px 0px navy; */
 }
 .startButton:hover {
   background:linear-gradient(to bottom, #FF00D8 5%, #ff5bb0 100%);
@@ -190,8 +172,7 @@ p{
 
 .center {
   margin: 0;
-/*  position: absolute;
-*/  top: 50%;
+  top: 50%;
   left: 50%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
