@@ -99,6 +99,7 @@ const PoseEngine = (() => {
         this.activeCollisions.indexOf(otherKeypoint.name),
         1
       );
+    }
 
     updateScore(score) {
       this.score = score
@@ -224,6 +225,15 @@ const PoseEngine = (() => {
         bodyCenterPosition.x += keypoint.position.x / keypoints.length;
         bodyCenterPosition.y += keypoint.position.y / keypoints.length;
       }
+      const shoulderAverage = { x: 0, y: 0 }
+      for (let i = 0; i < keypoints.length; i++) {
+        const keypoint = keypoints[i];
+        if (keypoint.part === "leftShoulder" || keypoint.part === "rightShoulder"){
+          shoulderAverage.y += keypoint.position.y / 2;
+          shoulderAverage.x += keypoint.position.x /2;
+        }
+      }
+
       for (let i = 0; i < keypoints.length; i++) {
         const keypoint = keypoints[i];
         keypointState[keypoint.part].updatePosition(keypoint.position, deltaT);
@@ -232,8 +242,9 @@ const PoseEngine = (() => {
         const keypoint = keypointState[keypoints[i].part];
         for (let j = i + 1; j < keypoints.length; j++) {
           const otherKeypoint = keypointState[keypoints[j].part];
-//////////////////////////////////////////////////////
-          if (keypoint.y > bodyCenterPosition.y && otherKeypoint.y > bodyCenterPosition.y){
+/////////////////// RAISE HANDS TO SPARKLE CODE ///////////////////////////////////
+// console.log(Math.round(keypoint.y), Math.round(shoulderAverage.y));
+          if (keypoint.y < 0.9*shoulderAverage.y && otherKeypoint.y < 0.9*shoulderAverage.y){
             keypoint.triggerRaise(otherKeypoint);
             otherKeypoint.triggerRaise(keypoint);
           }
@@ -241,7 +252,7 @@ const PoseEngine = (() => {
             keypoint.removeRaise(otherKeypoint);
             otherKeypoint.removeRaise(keypoint);
           }
-          //////////////////////////////
+//////////////////////////////////////////////////////////////////
           const distance =
             Math.sqrt(
               Math.pow(keypoint.x - otherKeypoint.x, 2) +
