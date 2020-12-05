@@ -3,7 +3,7 @@ const startEngine = () => {
   document.querySelector("#p5-canvas-div").hidden = false;
   DrawingEngine.start();
   Tone.start();
-  
+
   function setMasterVolume(e) {
     if (e.target.value <= -38) {
       Tone.Destination.volume.value = -200;
@@ -14,7 +14,7 @@ const startEngine = () => {
   }
   document.querySelector('#volumeSlider').addEventListener("input", setMasterVolume);
   Tone.Destination.volume.value = document.querySelector('#volumeSlider').value;
-  
+
   const clapToSparkleListener = new PoseEngine.EventListener('leftWrist', PoseEngine.EventType.Collision, (keypoint, data) => {
     if (data.collider.name === 'rightWrist') {
       if (allSoundOn){
@@ -30,7 +30,7 @@ const startEngine = () => {
   });
   // PoseEngine.addListener(clapToSparkleListener);
   // DrawingEngine.addAnimatedObject(new KeypointDebugger());
-  
+
   // Background Music
   const musicDropdown = document.getElementById('list');
   const backgroundMusicCheckbox = document.getElementById('backSounds');
@@ -40,13 +40,13 @@ const startEngine = () => {
 
   var selectedBackMusic = musicDropdown.value;
   var backgroundMusic;
-  
+
   const onBackgroundMusicLoad = () => {
     if (backgroundMusicCheckbox.checked) {
       backgroundMusic.start(0, backgroundMusic.immediate());
     }
   }
-  
+
   backgroundMusic = new Tone.Player({
     url:`music/long/${selectedBackMusic}.mp3`,
     autostart: false,
@@ -62,9 +62,9 @@ const startEngine = () => {
       url:`music/long/${selectedBackMusic}.mp3`,
       autostart: backgroundMusicCheckbox.checked,
       loop: true,
-    }).toDestination();    
+    }).toDestination();
   }
-  
+
   function toggleBackgroundSound() {
     if (!backgroundMusic.loaded) {
       return;
@@ -75,7 +75,7 @@ const startEngine = () => {
       backgroundMusic.stop();
     }
   }
-  
+
   // Fire Effect
   let leftHandFire = null;
   let rightHandFire = null;
@@ -97,4 +97,22 @@ const startEngine = () => {
     }
   });
   PoseEngine.addListener(clapToFireHandsListener);
+
+
+
+  // Sparkle Effect
+  let leftHandFire = null;
+  let rightHandFire = null;
+  const raiseHandsToSparkleListener = new PoseEngine.EventListener('leftWrist', PoseEngine.EventType.Raise, (keypoint, data) => {
+    if (data.raise.name === 'rightWrist') {
+    Engine.addAnimatedObject(new Sparkle(keypoint.x, keypoint.y, 3000));
+    for (let i = 0; i < 25; i++) {
+    Engine.addAnimatedObject(new Sparkle(data.raise.x, data.raise.y, 3000));
+    const randomOffset = () => (Math.random() * 100 - 50) / getDistanceRatio();
+
+      Engine.addAnimatedObject(new Sparkle(keypoint.x + randomOffset(), keypoint.y + randomOffset(), 20, 3000));
+      Engine.addAnimatedObject(new Sparkle(data.raise.x + randomOffset(), data.raise.y + randomOffset(), 20, 3000));
+    }
+  });
+  PoseEngine.addListener(raiseHandsToSparkleListener);
 }
