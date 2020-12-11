@@ -8,6 +8,7 @@ const PoseEngine = (() => {
     ExitCollision: 5, // e.g. right hand stops hitting left hand, data is {collider: otherKeypoint} for object it collided with
     CrossBody: 6, // e.g. right hand moves to left side of body
     Raise: 7, // e.g. both hands are up in the air
+    FullUpdate: 8, // e.g. after all updates occur, returns all points
   };
   class EventListener {
     constructor(keypointName, eventType, callback) {
@@ -27,6 +28,9 @@ const PoseEngine = (() => {
       )
       .forEach((listener) => listener.callback(keypoint, data));
   };
+  const fullUpdateCallbacks = (keypoints) => {
+    eventListeners.filter(listener => listener.eventType === EventType.FullUpdate).forEach(listener => listener.callback(keypoints, {}));
+  }
 
   class Keypoint {
     static startMovingSpeedCutoff = 2.5;
@@ -190,6 +194,8 @@ const PoseEngine = (() => {
     rightElbow: new Keypoint("rightElbow", bodyCenterPosition),
     leftWrist: new Keypoint("leftWrist", bodyCenterPosition),
     rightWrist: new Keypoint("rightWrist", bodyCenterPosition),
+    leftPalm: new Keypoint("leftPalm", bodyCenterPosition),
+    rightPalm: new Keypoint("rightPalm", bodyCenterPosition),
     leftHip: new Keypoint("leftHip", bodyCenterPosition),
     rightHip: new Keypoint("rightHip", bodyCenterPosition),
     leftKnee: new Keypoint("leftKnee", bodyCenterPosition),
@@ -211,6 +217,26 @@ const PoseEngine = (() => {
     const deltaT = currentTime - lastPoseTime;
     const poses = results.map((item) => item.pose);
     if (poses[0]) {
+      const leftWrist = poses[0].keypoints.find(keypoint => keypoint.part === 'leftWrist');
+      const leftElbow = poses[0].keypoints.find(keypoint => keypoint.part === 'leftElbow');
+      const rightWrist = poses[0].keypoints.find(keypoint => keypoint.part === 'rightWrist');
+      const rightElbow = poses[0].keypoints.find(keypoint => keypoint.part === 'rightElbow');
+      poses[0].keypoints.push({
+        part: 'leftPalm',
+        score: Math.min(leftWrist.score, leftElbow.score),
+        position: {
+          x: leftWrist.position.x * 1.4 + leftElbow.position.x * -0.4,
+          y: leftWrist.position.y * 1.4 + leftElbow.position.y * -0.4
+        }
+      });
+      poses[0].keypoints.push({
+        part: 'rightPalm',
+        score: Math.min(rightWrist.score, rightElbow.score),
+        position: {
+          x: rightWrist.position.x * 1.4 + rightElbow.position.x * -0.4,
+          y: rightWrist.position.y * 1.4 + rightElbow.position.y * -0.4
+        }
+      });
       poses[0].keypoints.forEach(keypoint => {
         keypointState[keypoint.part].updateScore(keypoint.score);
       })
@@ -271,6 +297,7 @@ const PoseEngine = (() => {
           }
         }
       }
+      fullUpdateCallbacks(poses[0].keypoints);
     }
   });
 
