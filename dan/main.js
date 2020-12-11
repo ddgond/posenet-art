@@ -35,9 +35,27 @@ const startEngine = () => {
     toggleDiv.appendChild(label);
     toggleSection.appendChild(toggleDiv);
   }
+  const createComplexToggle = (onCheck, onUncheck, labelText) => {
+    const toggleDiv = document.createElement('div');
+    const toggle = document.createElement('input');
+    toggle.type = 'checkbox';
+    toggle.addEventListener('change', () => {
+      if (toggle.checked) {
+        onCheck();
+      } else {
+        onUncheck();
+      }
+    });
+    toggle.style.marginRight = "8px";
+    const label = document.createElement('label');
+    label.innerText = labelText;
+    toggleDiv.appendChild(toggle);
+    toggleDiv.appendChild(label);
+    toggleSection.appendChild(toggleDiv);
+  }
 
-  const clapToSparkleListener = new PoseEngine.EventListener('leftWrist', PoseEngine.EventType.Collision, (keypoint, data) => {
-    if (data.collider.name === 'rightWrist') {
+  const clapToSparkleListener = new PoseEngine.EventListener('leftPalm', PoseEngine.EventType.Collision, (keypoint, data) => {
+    if (data.collider.name === 'rightPalm') {
       if (allSoundOn){
           startSound(); // first time you clap it will start background music
           createjs.Sound.play(nameSoundMap.clapSound, {volume:.3});
@@ -50,6 +68,8 @@ const startEngine = () => {
     }
   });
   // PoseEngine.addListener(clapToSparkleListener);
+  // createListenerToggle(clapToSparkleListener, "Clap to make sparkles.");
+  
   // DrawingEngine.addAnimatedObject(new KeypointDebugger());
 
   // Background Music
@@ -100,8 +120,8 @@ const startEngine = () => {
   // Fire Effect
   let leftHandFire = null;
   let rightHandFire = null;
-  const clapToFireHandsListener = new PoseEngine.EventListener('leftWrist', PoseEngine.EventType.Collision, (keypoint, data) => {
-    if (data.collider.name === 'rightWrist') {
+  const clapToFireHandsListener = new PoseEngine.EventListener('leftPalm', PoseEngine.EventType.Collision, (keypoint, data) => {
+    if (data.collider.name === 'rightPalm') {
       if (leftHandFire) {
         leftHandFire.remove();
         rightHandFire.remove();
@@ -119,10 +139,26 @@ const startEngine = () => {
   });
   // PoseEngine.addListener(clapToFireHandsListener);
   createListenerToggle(clapToFireHandsListener, "Clap to make fire.");
+  
+  // Lightning Effect
+  let handLightning = null;
+  const clapToLightningHandsListener = new PoseEngine.EventListener('leftPalm', PoseEngine.EventType.Collision, (keypoint, data) => {
+    if (data.collider.name === 'rightPalm') {
+      if (handLightning) {
+        handLightning.remove();
+        handLightning = null;
+      } else {
+        handLightning = new Lightning([keypoint, data.collider]);
+        console.log([keypoint, data.collider]);
+        DrawingEngine.addAnimatedObject(handLightning);
+      }
+    }
+  });
+  createListenerToggle(clapToLightningHandsListener, "Clap to make lightning.");
 
   // Sparkle Effect
-  const raiseHandsToSparkleListener = new PoseEngine.EventListener('leftWrist', PoseEngine.EventType.Raise, (keypoint, data) => {
-    if (data.raise.name === 'rightWrist') {
+  const raiseHandsToSparkleListener = new PoseEngine.EventListener('leftPalm', PoseEngine.EventType.Raise, (keypoint, data) => {
+    if (data.raise.name === 'rightPalm') {
 
       for (let i = 0; i < 25; i++) {
         // DrawingEngine.addAnimatedObject(new Sparkle(data.raise.x, data.raise.y, 60 / DrawingEngine.getDistanceRatio(), 2000));
@@ -137,4 +173,19 @@ const startEngine = () => {
   });
   // PoseEngine.addListener(raiseHandsToSparkleListener);
   createListenerToggle(raiseHandsToSparkleListener, "Raise your hands to make sparkles.");
+  
+  // const skeleton = new Skeleton(false);
+  // const skeletonListener = new PoseEngine.EventListener('', PoseEngine.EventType.FullUpdate, (keypoints, data) => {
+  //   keypoints.forEach(keypoint => {
+  //     skeleton.updatePoint(keypoint);
+  //   });
+  // });
+  // DrawingEngine.addAnimatedObject(skeleton);
+  // createComplexToggle(() => {
+  //   PoseEngine.addListener(skeletonListener);
+  //   skeleton.makeVisible();
+  // }, () => {
+  //   PoseEngine.removeListener(skeletonListener);
+  //   skeleton.makeInvisible();
+  // }, "Show your skeleton.");
 }

@@ -65,6 +65,7 @@ class KeypointDebugger extends DrawingEngine.AnimatedObject {
   
   draw(sketch, deltaT) {
     const keypoints = Object.values(PoseEngine.keypointState);
+    console.log(keypoints);
     keypoints
       .filter(keypoint => keypoint.score > 0.2)
       .forEach((keypoint) => {
@@ -76,7 +77,7 @@ class KeypointDebugger extends DrawingEngine.AnimatedObject {
             keypoint.x - (keypoint.velocity.x * 10),
             keypoint.y - (keypoint.velocity.y * 10)
         );
-        if (keypoint.name === 'rightWrist') {
+        if (keypoint.name === 'rightPalm') {
           sketch.circle(keypoint.x, keypoint.y, 20)
         }
     });
@@ -317,5 +318,139 @@ class FireWithSmoke extends DrawingEngine.AnimatedObject {
     // return Math.pow(1 + radialDistance * 2, param) - 1 // Exponential curve from (0,0) at base to (1,rMultOffset * 3)
     // return (Math.asin(param - 0.5) + (Math.PI / 2 - Math.asin(-0.5))) / Math.PI * radialDistance * 1.5 // Inverse sin curve
     return (Math.tan((param - (1/(Math.PI/4+0.5))) * (Math.PI/4+0.5)) + Math.tan(-0.5)) * radialDistance; // param = 0,1 mapped to -0.5,Math.PI/4 of tan function
+  }
+}
+
+class Lightning extends DrawingEngine.AnimatedObject {
+  static distancePerZag = 12;
+  static zagSize = 24;
+  static numBolts = 5;
+  
+  constructor(targets) {
+    super();
+    this.targets = targets;
+    this.done = false;
+  }
+  
+  remove() {
+    this.done = true;
+  }
+  
+  draw(sketch, deltaT) {
+    for (let boltIndex = 0; boltIndex < Lightning.numBolts; boltIndex++) {
+      const path = this.generatePath();
+      
+      const hue = Math.random() * 5 + 50;
+      const outerSaturation = Math.random() * 5 + 95;
+      const outerBrightness = Math.random() * 5 + 85;
+      const opacity = Math.random() * 15 + 85;
+      sketch.stroke(hue, outerSaturation, outerBrightness, opacity);
+      sketch.strokeWeight(7);
+      sketch.noFill();
+      sketch.beginShape(sketch.LINE_STRIP);
+      path.forEach(vertex => {
+        sketch.vertex(vertex.x, vertex.y);
+      });
+      sketch.endShape();
+      
+      const innerSaturation = Math.random() * 5;
+      const innerBrightness = Math.random() * 5 + 95;
+      sketch.stroke(hue, innerSaturation, innerBrightness, opacity);
+      sketch.strokeWeight(3);
+      sketch.noFill();
+      sketch.beginShape(sketch.LINE_STRIP);
+      path.forEach(vertex => {
+        sketch.vertex(vertex.x, vertex.y);
+      });
+      sketch.endShape();
+    }
+    return this.done;
+  }
+  
+  generatePath() {
+    const vertices = [];
+    for (let pathSegmentIndex = 0; pathSegmentIndex < this.targets.length - 1; pathSegmentIndex++) {
+      const start = this.targets[pathSegmentIndex];
+      const end = this.targets[pathSegmentIndex+1];
+      const steps = this.getDistance(start, end) / Lightning.distancePerZag;
+      for (let stepIndex = 0; stepIndex < steps; stepIndex++) {
+        const x = start.x + (end.x - start.x) * stepIndex / steps + Math.random() * Lightning.zagSize - Lightning.zagSize / 2;
+        const y = start.y + (end.y - start.y) * stepIndex / steps + Math.random() * Lightning.zagSize - Lightning.zagSize / 2;
+        vertices.push({x:x, y:y});
+      }
+    }
+    const lastTarget = this.targets[this.targets.length - 1];
+    vertices.push({x:lastTarget.x, y:lastTarget.y});
+    return vertices;
+  }
+  
+  getDistance(a, b) {
+    return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+  }
+}
+
+class Skeleton extends DrawingEngine.AnimatedObject {
+  constructor(visible) {
+    super();
+    this.visible = visible;
+    this.points = {
+      "leftShoulder": {x:0,y:0,active:false},
+      "rightShoulder": {x:0,y:0,active:false},
+      "leftElbow": {x:0,y:0,active:false},
+      "rightElbow": {x:0,y:0,active:false},
+      "leftWrist": {x:0,y:0,active:false},
+      "rightWrist": {x:0,y:0,active:false},
+      "leftHip": {x:0,y:0,active:false},
+      "rightHip": {x:0,y:0,active:false},
+      "leftKnee": {x:0,y:0,active:false},
+      "rightKnee": {x:0,y:0,active:false},
+      "leftAnkle": {x:0,y:0,active:false},
+      "rightAnkle": {x:0,y:0,active:false},
+    }
+    this.bones = [
+      [this.points.leftShoulder, this.points.leftElbow],
+      [this.points.leftElbow, this.points.leftWrist],
+      [this.points.leftShoulder, this.points.leftHip],
+      [this.points.leftHip, this.points.leftKnee],
+      [this.points.leftKnee, this.points.leftAnkle],
+      [this.points.rightShoulder, this.points.rightElbow],
+      [this.points.rightElbow, this.points.rightWrist],
+      [this.points.rightShoulder, this.points.rightHip],
+      [this.points.rightHip, this.points.rightKnee],
+      [this.points.rightKnee, this.points.rightAnkle],
+      [this.points.leftShoulder, this.points.rightShoulder],
+      [this.points.leftHip, this.points.rightHip],
+    ]
+  }
+  
+  makeVisible() {
+    this.visible = true;
+  }
+  
+  makeInvisible() {
+    this.visible = false;
+  }
+  
+  updatePoint(point) {
+    if (!this.points[point.part]) {
+      return;
+    }
+    this.points[point.part].x = point.position.x;
+    this.points[point.part].y = point.position.y;
+    this.points[point.part].active = point.score > 0.2;
+  }
+  
+  draw(sketch, deltaT) {
+    if (this.visible) {
+      sketch.stroke(0,0,100);
+      sketch.strokeWeight(4);
+      this.bones.forEach(bone => {
+        if (bone[0].active && bone[1].active) {
+          sketch.line(bone[0].x, bone[0].y, bone[1].x, bone[1].y);
+        }
+      });
+    }
+    
+    return false;
   }
 }
