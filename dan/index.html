@@ -20,117 +20,129 @@
 </head>
 
 <body>
-    <script src="ml5.min.js"></script>
-    <script src="p5.min.js"></script>
-    <script src="tone.js"></script>
-    <script src="drawingEngine.js"></script>
-    <script src="poseEngine.js"></script>
-    <script src="effects.js"></script>
-    <script src="main.js"></script>
+  <script src="ml5.min.js"></script>
+  <script src="p5.min.js"></script>
+  <script src="tone.js"></script>
+  <script src="drawingEngine.js"></script>
+  <script src="poseEngine.js"></script>
+  <script src="effects.js"></script>
+  <script src="main.js"></script>
 
-    <div class="menu-div">
-        <div class="header-section">
-            <a href="/" class="header-section">PoseNet Art</a>
-        </div>
-        <div class="subheader-section">
-            <p>with <i class="far fa-heart" style="color: #FF00D8"></i> from AIM Labs</p>
-        </div>
-    </div>
+  <div class="menu-div">
+      <div class="header-section">
+          <a href="/" class="header-section">PoseNet Art</a>
+      </div>
+      <div class="subheader-section">
+          <p>with <i class="far fa-heart" style="color: #FF00D8"></i> from AIM Labs</p>
+      </div>
+  </div>
 
-    <div class="menu-div" id="startButton">
-        <div class="subheader-section">
-            <button class="startButton" onclick="startEngine()">Start</button>
-        </div>
-    </div>
+  <div class="menu-div" id="startButton">
+      <div class="subheader-section">
+          <button class="startButton" onclick="startEngine()">Start</button>
+      </div>
+  </div>
 
-    <div id="p5-canvas-div" hidden>
-    </div>
+  <div id="p5-canvas-div" hidden>
+  </div>
 
-    <div class="menu-div">
+  <div class="menu-div">
+      <p class="collapsible" id="toggleSectionLabel" hidden>
+          <a data-toggle="collapse" href="#toggleSection" role="button"
+              aria-expanded="false" aria-controls="toggleSection">
+              <i class="fas fa-caret-right"></i> Effects
+          </a>
+      </p>
+      <div class="collapse show" id="toggleSection">
+        
+      </div>
+      
+      <div style="padding-top:20px;"></div> <!-- padding between collapsible items-->
 
-        <!-- INSTRUCTIONS TOGGLE -->
-        <p class="collapsible">
-            <a data-toggle="collapse" href="#instructionsSection" role="button"
-                aria-expanded="false" aria-controls="instructionsSection">
-                <i class="fas fa-caret-right"></i> Instructions
-            </a>
-        </p>
-        <div class="collapse" id="instructionsSection">
-            <div class="content">
-                <ol type="1">
-                    <li>Click the start button</li>
-                    <li>Optional) Adjust the sound settings</li>
-                    <li>Stand in front of the camera so that most of your body is visible</li>
-                    <li>Clap and start moving!</li>
-                    <p style="font-style: italic;">Tip: try it with background music on!</p>
-                </ol>
-            </div>
-        </div>
+      <!-- INSTRUCTIONS TOGGLE -->
+      <p class="collapsible">
+          <a data-toggle="collapse" href="#instructionsSection" role="button"
+              aria-expanded="false" aria-controls="instructionsSection">
+              <i class="fas fa-caret-right"></i> Instructions
+          </a>
+      </p>
+      <div class="collapse" id="instructionsSection">
+          <div class="content">
+              <ol type="1">
+                  <li>Click the start button</li>
+                  <li>Choose your effects</li>
+                  <li>(Optional) Adjust the sound settings</li>
+                  <li>Stand in front of the camera so that most of your body is visible</li>
+                  <li>Have fun!</li>
+                  <p style="font-style: italic;">Tip: try it with background music on!</p>
+              </ol>
+          </div>
+      </div>
 
-        <div style="padding-top:20px;"></div> <!-- padding between collapsible items-->
+      <div style="padding-top:20px;"></div> <!-- padding between collapsible items-->
 
-        <!-- SOUND SETTINGS TOGGLE -->
-        <p class="collapsible">
-            <a data-toggle="collapse" href="#soundSection" role="button"
-                aria-expanded="false" aria-controls="soundSection">
-                <i class="fas fa-caret-right"></i> Sound Settings
-            </a>
-        </p>
-        <div class="collapse" id="soundSection">
-            <div class="content">
-                <!-- Master volume-->
-                <div class="menu-row">
-                    <span style="padding-left:1px">Master volume: </span><input type="range" id="volumeSlider" min="-40" max="0"
-                        value="0" />
-                </div>
-                <!-- Background sound toggle-->
-                <div class="menu-row">
-                    <table>
-                        <!-- use a table for vertical alignment -->
-                        <tr>
-                            <td><label for="backSounds">Background sound:</label></td>
-                            <td><input class="toggle" type="checkbox" id="backSounds" /></td>
-                        </tr>
-                    </table>
-                </div>
-                <!-- Background sound selector-->
-                <div class="menu-row">
-                    <span style="padding-left:1px">
-                        <!-- extra padding to align with background sound -->
-                        Select background sound:
-                    </span>
-                    <span>
-                        <select id="list" class="list" selected="music1">
-                            <option value="music1">Music 1</option>
-                            <option value="music2">Music 2</option>
-                            <option value="music3">Music 3</option>
-                            <option value="music4">Music 4</option>
-                            <option value="music5">Music 5</option>
-                            <option value="music6">Music 6</option>
-                        </select>
-                    </span>
-                </div>
-            </div>
-        </div>
+      <!-- SOUND SETTINGS TOGGLE -->
+      <p class="collapsible">
+          <a data-toggle="collapse" href="#soundSection" role="button"
+              aria-expanded="false" aria-controls="soundSection">
+              <i class="fas fa-caret-right"></i> Sound Settings
+          </a>
+      </p>
+      <div class="collapse" id="soundSection">
+          <div class="content">
+              <!-- Master volume-->
+              <div class="menu-row">
+                  <span style="padding-left:1px">Master volume: </span><input type="range" id="volumeSlider" min="-40" max="0"
+                      value="0" />
+              </div>
+              <!-- Background sound toggle-->
+              <div class="menu-row">
+                  <table>
+                      <!-- use a table for vertical alignment -->
+                      <tr>
+                          <td><label for="backSounds">Background sound:</label></td>
+                          <td><input class="toggle" type="checkbox" id="backSounds" /></td>
+                      </tr>
+                  </table>
+              </div>
+              <!-- Background sound selector-->
+              <div class="menu-row">
+                  <span style="padding-left:1px">
+                      <!-- extra padding to align with background sound -->
+                      Select background sound:
+                  </span>
+                  <span>
+                      <select id="list" class="list" selected="music1">
+                          <option value="music1">Music 1</option>
+                          <option value="music2">Music 2</option>
+                          <option value="music3">Music 3</option>
+                          <option value="music4">Music 4</option>
+                          <option value="music5">Music 5</option>
+                          <option value="music6">Music 6</option>
+                      </select>
+                  </span>
+              </div>
+          </div>
+      </div>
 
-        <div style="padding-top:20px;"></div> <!-- padding between collapsible items-->
+      <div style="padding-top:20px;"></div> <!-- padding between collapsible items-->
 
-        <p class="collapsible">
-            <a  href="about.html">
-                <i class="fas fa-external-link-alt" style="font-size: 14px;"></i> About
-            </a>
-        </p>
-    </div>
+      <p class="collapsible">
+          <a  href="about.html">
+              <i class="fas fa-external-link-alt" style="font-size: 14px;"></i> About
+          </a>
+      </p>
+  </div>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"></script>
 </body>
 
 </html>

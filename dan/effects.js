@@ -47,11 +47,13 @@ class Sparkle extends DrawingEngine.AnimatedObject {
   }
 
   onRemove() {
-    this.raiseSound.onstop = () => {
-      this.raiseSound.dispose();
-    };
-    // this.raiseSound.loop = false;
-    // this.raiseSound.seek(2.5);
+    if (this.raiseSound.loaded) {
+      this.raiseSound.onstop = () => {
+        this.raiseSound.dispose();
+      };
+      // this.raiseSound.loop = false;
+      // this.raiseSound.seek(2.5);
+    }
   }
 }
 
@@ -190,15 +192,19 @@ class FireWithSmoke extends DrawingEngine.AnimatedObject {
   }
   
   onRemove() {
-    this.matchSound.start();
-    this.matchSound.onstop = () => {
-      this.matchSound.dispose();
-    };
-    this.fireSound.loop = false;
-    this.fireSound.seek(2.5);
-    this.fireSound.onstop = () => {
-      this.fireSound.dispose();
-    };
+    if (this.matchSound.loaded) {
+      this.matchSound.start();
+      this.matchSound.onstop = () => {
+        this.matchSound.dispose();
+      };
+    }
+    if (this.fireSound.loaded) {
+      this.fireSound.loop = false;
+      this.fireSound.seek(2.5);
+      this.fireSound.onstop = () => {
+        this.fireSound.dispose();
+      };
+    }
   }
   
   setWind(xSpeed, ySpeed) {

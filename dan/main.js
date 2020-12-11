@@ -15,6 +15,27 @@ const startEngine = () => {
   document.querySelector('#volumeSlider').addEventListener("input", setMasterVolume);
   Tone.Destination.volume.value = document.querySelector('#volumeSlider').value;
 
+  document.querySelector('#toggleSectionLabel').hidden = false;
+  const toggleSection = document.querySelector('#toggleSection');
+  const createListenerToggle = (listener, labelText) => {
+    const toggleDiv = document.createElement('div');
+    const toggle = document.createElement('input');
+    toggle.type = 'checkbox';
+    toggle.addEventListener('change', () => {
+      if (toggle.checked) {
+        PoseEngine.addListener(listener);
+      } else {
+        PoseEngine.removeListener(listener);
+      }
+    });
+    toggle.style.marginRight = "8px";
+    const label = document.createElement('label');
+    label.innerText = labelText;
+    toggleDiv.appendChild(toggle);
+    toggleDiv.appendChild(label);
+    toggleSection.appendChild(toggleDiv);
+  }
+
   const clapToSparkleListener = new PoseEngine.EventListener('leftWrist', PoseEngine.EventType.Collision, (keypoint, data) => {
     if (data.collider.name === 'rightWrist') {
       if (allSoundOn){
@@ -96,26 +117,24 @@ const startEngine = () => {
       }
     }
   });
-  PoseEngine.addListener(clapToFireHandsListener);
-
-
+  // PoseEngine.addListener(clapToFireHandsListener);
+  createListenerToggle(clapToFireHandsListener, "Clap to make fire.");
 
   // Sparkle Effect
-
- const raiseHandsToSparkleListener = new PoseEngine.EventListener('leftWrist', PoseEngine.EventType.Raise, (keypoint, data) => {
+  const raiseHandsToSparkleListener = new PoseEngine.EventListener('leftWrist', PoseEngine.EventType.Raise, (keypoint, data) => {
     if (data.raise.name === 'rightWrist') {
-    
-        for (let i = 0; i < 25; i++) {
-            // DrawingEngine.addAnimatedObject(new Sparkle(data.raise.x, data.raise.y, 60 / DrawingEngine.getDistanceRatio(), 2000));
-            // DrawingEngine.addAnimatedObject(new Sparkle(keypoint.x, keypoint.y, 60 / DrawingEngine.getDistanceRatio(), 2000));
 
-            const randomOffset = () => (Math.random() * 100 - 50) / DrawingEngine.getDistanceRatio();
+      for (let i = 0; i < 25; i++) {
+        // DrawingEngine.addAnimatedObject(new Sparkle(data.raise.x, data.raise.y, 60 / DrawingEngine.getDistanceRatio(), 2000));
+        // DrawingEngine.addAnimatedObject(new Sparkle(keypoint.x, keypoint.y, 60 / DrawingEngine.getDistanceRatio(), 2000));
 
-            DrawingEngine.addAnimatedObject(new Sparkle(keypoint.x + randomOffset(), keypoint.y + randomOffset(), 60 / DrawingEngine.getDistanceRatio(), 2000));
-            DrawingEngine.addAnimatedObject(new Sparkle(data.raise.x + randomOffset(), data.raise.y + randomOffset(), 60 / DrawingEngine.getDistanceRatio(), 2000));
-        }
+        const randomOffset = () => (Math.random() * 100 - 50) / DrawingEngine.getDistanceRatio();
+
+        DrawingEngine.addAnimatedObject(new Sparkle(keypoint.x + randomOffset(), keypoint.y + randomOffset(), 60 / DrawingEngine.getDistanceRatio(), 2000));
+        DrawingEngine.addAnimatedObject(new Sparkle(data.raise.x + randomOffset(), data.raise.y + randomOffset(), 60 / DrawingEngine.getDistanceRatio(), 2000));
+      }
     }
-});
-PoseEngine.addListener(raiseHandsToSparkleListener);
-
+  });
+  // PoseEngine.addListener(raiseHandsToSparkleListener);
+  createListenerToggle(raiseHandsToSparkleListener, "Raise your hands to make sparkles.");
 }

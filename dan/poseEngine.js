@@ -91,14 +91,14 @@ const PoseEngine = (() => {
     }
 
     triggerRaise(otherKeypoint) {
-      this.activeCollisions.push(otherKeypoint.name);
+      // this.activeCollisions.push(otherKeypoint.name);
       triggerListeners(this, EventType.Raise, { raise: otherKeypoint });
     }
     removeRaise(otherKeypoint) {
-      this.activeCollisions.splice(
-        this.activeCollisions.indexOf(otherKeypoint.name),
-        1
-      );
+      // this.activeCollisions.splice(
+      //   this.activeCollisions.indexOf(otherKeypoint.name),
+      //   1
+      // );
     }
 
     updateScore(score) {
