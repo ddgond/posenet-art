@@ -9,6 +9,7 @@ class Sparkle extends DrawingEngine.AnimatedObject {
     this.radius = radius;
     this.elapsedTime = 0;
     this.duration = duration;
+    this.done = false;
 
     this.raiseSound = new Tone.Player({
       url:'music/glitch/sparkle.mp3',
@@ -24,6 +25,10 @@ class Sparkle extends DrawingEngine.AnimatedObject {
     //   loopEnd: 2.5,
     //   volume: -5
     // }).toDestination();
+  }
+  
+  remove() {
+    this.done = true;
   }
   
   draw(sketch, deltaT) {
@@ -43,11 +48,12 @@ class Sparkle extends DrawingEngine.AnimatedObject {
     this.x = this.x + (Math.random()-0.5) * Sparkle.wiggleDistance / DrawingEngine.getDistanceRatio();
     this.y = this.y + (Math.random()-0.2) * 2 * Sparkle.fallSpeed / DrawingEngine.getDistanceRatio() * deltaT;
     sketch.ellipse(this.x, this.y, this.radius / DrawingEngine.getDistanceRatio(), this.radius / DrawingEngine.getDistanceRatio());
-    return false;
+    return this.done;
   }
 
   onRemove() {
     if (this.raiseSound.loaded) {
+      this.raiseSound.seek(999);
       this.raiseSound.onstop = () => {
         this.raiseSound.dispose();
       };
