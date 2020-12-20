@@ -1,4 +1,6 @@
 ## PoseNet-Art
+![posenet-art-logo](./posenet-art-logo.png)
+
  PoseNet Art is an interactive app where the user’s motion activates real-time animations and sounds. It is meant to be used for creative and entertainment purposes.
 
  PoseNet is a machine learning model for real-time pose estimation. We used a PoseNet implementation from ml5.js. We used p5.js to create animations and Tone.js to create sound effects.
