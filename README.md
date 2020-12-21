@@ -9,7 +9,7 @@
  PoseNet is a machine learning model for real-time pose estimation. We used a PoseNet implementation from ml5.js. We used p5.js to create animations and Tone.js to create sound effects.
 
  PoseNet Art was created by three MIT students in the fall of 2020 as part of the inaugural cohort of AI@MIT Labs:
- - Daniel Dangong
+ - Daniel Dangond
  - Kathleen Esfahany
  - Sanja Simonovikj
 
